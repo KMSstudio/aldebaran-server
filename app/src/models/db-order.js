@@ -14,6 +14,7 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.AWS_ORDER_LIST;
 
 // Create a new order
+// Needs: wholesale.code, wholesale.name, retail.ip, retail.code, retail.name, order.content, orcer.price
 const createOrder = async (wholesale, retail, order) => {
     const id = crypto.randomUUID();
     const date = new Date().toISOString().slice(0, 16).replace('T', ' ');
@@ -21,16 +22,16 @@ const createOrder = async (wholesale, retail, order) => {
     const params = {
         TableName: tableName,
         Item: {
-            wholesaleId: wholesale.id,          // Partition key
-            id,                                 // Sort key
-            wholesaleName: wholesale.name,      // Wholesale name attribute
-            retailId: retail.id,                // Retailer ID attribute
-            retailIp: retail.ip,                // Retailer IP address
-            retailName: retail.name,            // Retailer name attribute
-            order: order.content,               // Order details
-            price: order.price,
+            id,                                 // Partition key
+            wholesale: wholesale.code,          // Wholesale code (GSI key)
+            retail: retail.code,                // Retail code
             date,                               // Order date
-            status: "standby"                   // Order status
+            ip: retail.ip,                      // Retailer IP address
+            status: "standby",                  // Order status
+            content: order.content,             // Order details
+            price: order.price,
+            wholesaleName: wholesale.name,      // Wholesale name attribute
+            retailName: retail.name             // Retailer name attribute
         },
     };
 
@@ -43,14 +44,11 @@ const createOrder = async (wholesale, retail, order) => {
 };
 
 // Delete an order
-const deleteOrder = async (wholesaleId, id) => {
+const deleteOrder = async (id) => {
     // First, retrieve the order to check its status
     const getParams = {
         TableName: tableName,
-        Key: {
-            wholesaleId,
-            id
-        }
+        Key: { id }
     };
 
     try {
@@ -60,7 +58,7 @@ const deleteOrder = async (wholesaleId, id) => {
 
         const deleteParams = {
             TableName: tableName,
-            Key: { wholesaleId, id }
+            Key: { id }
         };
 
         await dynamoDB.delete(deleteParams).promise();
@@ -70,13 +68,14 @@ const deleteOrder = async (wholesaleId, id) => {
     }
 };
 
-// Request all orders by wholesaleId
-const requestOrder = async (wholesaleId) => {
+// Request all orders by wholesale code using GSI
+const WrequestOrder = async (code) => {
     const params = {
         TableName: tableName,
-        KeyConditionExpression: "wholesaleId = :wholesaleId",
+        IndexName: "wholesale-index",  // GSI name
+        KeyConditionExpression: "wholesale = :wholesaleCode",
         ExpressionAttributeValues: {
-            ":wholesaleId": wholesaleId
+            ":wholesaleCode": code
         }
     };
 
@@ -91,5 +90,5 @@ const requestOrder = async (wholesaleId) => {
 module.exports = {
     createOrder,
     deleteOrder,
-    requestOrder,
+    WrequestOrder,
 };

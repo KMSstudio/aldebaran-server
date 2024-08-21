@@ -21,9 +21,11 @@ router.get("/wholesale/login", ctrl.output.wholesale.login);
 router.post("/wholesale/login", ctrl.wholesale.login);
 
 router.get("/wholesale/home", ctrl.process.wholesale.home);
-router.get('/wholesale/main', ctrl.output.wholesale.main);
 
 // Order
 router.post("/order/push", ctrl.order.push);
+
+// Product
+
 
 module.exports = router;

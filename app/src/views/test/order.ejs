@@ -100,13 +100,13 @@
             const order = {};
             order.content = [
                 { code: "GV293", name: "상추", cnt: 2 },
-                { code: "GV295", name: "고추", cnt: 1, option: ["특"] }
+                { code: "GV295", name: "고추", cnt: 1, opt: ["특"] }
             ];
             order.price = 23000;
 
             const orderData = {
-                wholesale: { id: wholesaleId, name: wholesaleName },
-                retail: { id: retailId, name: retailName },
+                wholesale: { code: wholesaleId, name: wholesaleName },
+                retail: { code: retailId, name: retailName },
                 order,
             };
 

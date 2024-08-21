@@ -12,6 +12,8 @@ AWS.config.update({
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.AWS_WHOLESALE_USER;
 
+const Sequence = require("./Sequence");
+
 // Check if user ID is valid
 const isValid = async (id) => {
     const params = {
@@ -66,12 +68,14 @@ const createUser = async (id, pw, user) => {
     const existingUserCheck = await isValid(id);
     if (existingUserCheck.exist) { return { success: false, code: 2002, message: 'User ID already exists.' }; }
     if (isTooEasyPW(pw)) { return { success: false, code: 2003, message: 'Password cannot be "0000".' }; }
+    const code = Sequence.nextSequence('wholesale', -1);
 
     const params = {
         TableName: tableName,
         Item: {
             id,
             pw,
+            code,
             ...user
         },
     };

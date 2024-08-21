@@ -15,7 +15,7 @@ const tableName = process.env.AWS_USER_SESSION_TABLE;
 const sessionExpireIn = process.env.USER_SESSION_EXPIRE_IN
 
 // Create a new session
-const createSession = async (id, type) => {
+const createSession = async (data, type) => {
     const session = crypto.randomUUID(); // Generate unique session ID
     const now = Math.floor(Date.now() / 1000); // Current time in seconds
     const expireTime = now + sessionExpireIn; // Add 1 hour (3600 seconds)
@@ -24,7 +24,7 @@ const createSession = async (id, type) => {
         TableName: tableName,
         Item: {
             session,
-            id,
+            ...data,
             type,
             datetime: Number(expireTime)
         },
@@ -48,7 +48,10 @@ const checkSession = async (session, type) => {
         if (!data.Item) { return { success: false, code: 2203, message: 'Session does not exist.' }; }
         else if (data.Item.type !== type) { return { success: false, code: 2203, message: 'Session does not exist.' }; }
         else if (Math.floor(Date.now() / 1000) > data.Item.datetime) { return { success: false, code: 2204, message: 'Session has expired.' }; }
-        else { return { success: true, code: 0, id: data.Item.id, message: 'Session is valid.' }; }
+        else { 
+            delete data.Item.type; delete data.Item.datetime; delete data.Item.session;
+            return { success: true, code: 0, ...data.Item, message: 'Session is valid.' };
+        }
     } catch (error) { return { success: false, code: 2102, message: 'Error checking session', error }; }
 };
 

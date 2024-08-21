@@ -13,15 +13,6 @@ const output = {
     wholesale: {
         regist: (req, res) => { res.render("wholesale/regist"); },
         login: (req, res) => { res.render("wholesale/login"); },
-        main: async (req, res) => {
-            const session = req.cookies.session;  // Assuming session is stored in cookies
-            if (!session) { return res.render("wholesale/main", { loggedIn: false }); }
-            try {
-                const result = await userSessions.checkSession(session, 'W');
-                if (result.success) { return res.render("wholesale/main", { loggedIn: true, userId: result.id }); }
-                else { return res.render("wholesale/main", { loggedIn: false }); }
-            } catch (error) { return res.status(500).render("wholesale/main", { loggedIn: false }); }
-        },
     },
 }
 
@@ -32,27 +23,24 @@ const process = {
             // Get session
             const session = req.cookies.session;
             let user = 'none';
+            let code = '0000';
 
             if (session) {
                 try {
                     const result = await userSessions.checkSession(session, 'W');
-                    if (result.success) {
-                        user = result.id;
-                    }
-                } catch (error) {
-                    console.error('Session validation error:', error);
-                }
+                    if (result.success) { user = result.id; code = result.code; }
+                } catch (error) { console.error('Session validation error:', error); }
             }
 
             // Get order
             const order = { orders: [], msg: '', success: true };
             if (user !== 'none') {
                 try {
-                    const orderData = await db_order.requestOrder(user);
+                    const orderData = await db_order.WrequestOrder(code);
                     if (orderData.success) {
                         order.orders = orderData.orders.map(record => ({
                             customer: record.retailName,
-                            product: record.order.map(item => `${item.name} ${item.cnt}`),
+                            product: record.content.map(item => `${item.name} ${item.cnt}`),
                             price: record.price,
                             date: record.date
                         }));
@@ -69,7 +57,6 @@ const process = {
                 order.msg = 'User session is invalid or expired.';
                 order.success = false;
             }
-            console.log(order);
 
             // Render home.ejs
             res.render("wholesale/home", {
@@ -93,7 +80,7 @@ const wholesale = {
         try { 
             const result = await db_wholesale.reqUser(id, pw);
             if (result.code != 0){ res.json(result); return; }
-            const reqSession = await userSessions.createSession(id, 'W');
+            const reqSession = await userSessions.createSession({ code: result.user.code, id: result.user.id }, 'W');
             if (reqSession.code != 0){ res.json(reqSession); return; }
             // Save the session in a cookie
             res.cookie('session', reqSession.session, {
