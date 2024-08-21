@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
+    <title>Wholesale Main Page</title>
     <link rel="stylesheet" href="/css/wholesale/style.css">
     <link rel="stylesheet" href="/css/wholesale/home.css">
 </head>
@@ -26,10 +26,12 @@
     <div class="content">
         <div class="order-info">
             <h2>주문안내</h2>
-            <% if (order.length === 0) { %>
+            <% if (!order.success) { %>
+                <p><%= order.msg %></p>
+            <% } else if (order.orders.length === 0) { %>
                 <p>들어온 주문이 아직 없습니다.</p>
             <% } else { %>
-                <p class="order-count">(<%= order.length %>)</p>
+                <p class="order-count">(<%= order.orders.length %>)</p>
                 <table class="order-table">
                     <thead>
                         <tr>
@@ -40,7 +42,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% order.forEach(function(o) { %>
+                        <% order.orders.forEach(function(o) { %>
                             <tr>
                                 <td><%= o.customer %></td>
                                 <td><%= o.product.join(", ") %></td>

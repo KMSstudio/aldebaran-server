@@ -7,6 +7,9 @@ const ctrl = require("./home.ctrl");
 
 router.get("/", ctrl.output.home);
 
+// Test
+router.get("/test/order", (req, res) => { res.render("test/order"); });
+
 // Session
 router.post("/session/check", ctrl.session.checkSession)
 
@@ -19,5 +22,8 @@ router.post("/wholesale/login", ctrl.wholesale.login);
 
 router.get("/wholesale/home", ctrl.process.wholesale.home);
 router.get('/wholesale/main', ctrl.output.wholesale.main);
+
+// Order
+router.post("/order/push", ctrl.order.push);
 
 module.exports = router;

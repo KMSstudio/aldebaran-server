@@ -3,6 +3,7 @@
 require("dotenv").config();
 
 const db_wholesale = require("../models/db-wholesale");
+const db_order = require("../models/db-order");
 const userSessions = require("../models/UserSessions");
 
 const output = {
@@ -35,40 +36,58 @@ const process = {
             if (session) {
                 try {
                     const result = await userSessions.checkSession(session, 'W');
-                    if (result.success) { user = result.id; }
-                } catch (error) { console.error('Session validation error:', error); }
+                    if (result.success) {
+                        user = result.id;
+                    }
+                } catch (error) {
+                    console.error('Session validation error:', error);
+                }
             }
 
             // Get order
-            const orders = [
-                {
-                    customer: "상호명1",
-                    product: ["상품1", "상품2", "상품3", "상품4", "상품5"],
-                    price: 32000,
-                    date: "2024.08.21"
-                },
-                {
-                    customer: "상호명2",
-                    product: ["상품3", "상품4"],
-                    price: 21500,
-                    date: "2024.08.21"
+            const order = { orders: [], msg: '', success: true };
+            if (user !== 'none') {
+                try {
+                    const orderData = await db_order.requestOrder(user);
+                    if (orderData.success) {
+                        order.orders = orderData.orders.map(record => ({
+                            customer: record.retailName,
+                            product: record.order.map(item => `${item.name} ${item.cnt}`),
+                            price: record.price,
+                            date: record.date
+                        }));
+                    } else { 
+                        order.msg = `cannot request data: ${orderData.message}`;
+                        order.success = false;
+                    }
+                } catch (error) {
+                    console.error('Order retrieval error:', error);
+                    order.msg = 'cannot request data: Server error';
+                    order.success = false;
                 }
-            ];
+            } else { 
+                order.msg = 'User session is invalid or expired.';
+                order.success = false;
+            }
+            console.log(order);
 
-            // Render
-            res.render("wholesale/home", { id: user, order: orders });
+            // Render home.ejs
+            res.render("wholesale/home", {
+                id: user,
+                order: order,
+            });
         },
     },
 };
 
 const wholesale = {
-    // Try to regist user
+    // regist user
     regist: async (req, res) => {
         const { id, pw, ...userData } = req.body;
         try { const result = await db_wholesale.createUser(id, pw, { ...userData }); res.json(result); }
         catch (error) { res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error }); }
     },
-    // Try to login and get user information
+    // login and get user info
     login : async (req, res) => {
         const { id, pw } = req.body;
         try { 
@@ -86,6 +105,21 @@ const wholesale = {
         } catch (error) { res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error }); }
     },
 }
+
+const order = {
+    // push order
+    push: async (req, res) => {
+        const { wholesale, retail, order } = req.body;
+        retail.ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        try {
+            const result = await db_order.createOrder(wholesale, retail, order);
+            res.json(result);
+        } catch (error) {
+            console.error('Error creating order:', error);
+            res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error });
+        }
+    }
+};
 
 const session = {
     // Create a session with id and type
@@ -141,5 +175,6 @@ module.exports = {
     output,
     process,
     wholesale,
+    order,
     session,
 };
