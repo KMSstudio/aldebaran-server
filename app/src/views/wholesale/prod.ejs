@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= user.id %>의 상품 관리</title>
+    <link rel="stylesheet" href="/css/wholesale/style.css">
+    <link rel="stylesheet" href="/css/wholesale/prod.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo-section">
+            <div class="logo">logo</div>
+            <div class="logo">logo</div>
+        </div>
+        <div class="menu-section">
+            <a href="/wholesale/prod">상품등록</a>
+            <a href="#">주문안내</a>
+            <a href="#">접속량통계</a>
+        </div>
+        <div class="user-info">
+            <span><%= user.id %> v</span>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="product-info">
+            <h2><%= user.id %>의 상품</h2>
+            <div class="prod-toggle">
+                <button>상품</button>
+                <button>옵션</button>
+            </div>
+
+            <% if (!prod.success) { %>
+                <p class="error-msg"><%= prod.msg %></p>
+            <% } else if (prod.prods.length === 0) { %>
+                <p>prods가 비어있습니다.</p>
+            <% } else { %>
+                <table class="prod-table">
+                    <thead>
+                        <tr>
+                            <th>상품코드</th>
+                            <th>상품명</th>
+                            <th>단가</th>
+                            <th>최소주문수량</th>
+                            <th>단위주문수량</th>
+                            <th>옵션</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% prod.prods.forEach(function(item) { %>
+                            <tr>
+                                <td><%= item.code %></td>
+                                <td><%= item.name %></td>
+                                <td><%= item.price.toLocaleString() %></td>
+                                <td><%= item.minCnt %></td>
+                                <td><%= item.unitCnt %></td>
+                                <td><%= item.opt || '-' %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } %>
+        </div>
+        <div class="sidebar">
+            <div class="user-profile">
+                <p><%= user.id %></p>
+                <p>도매처 코드: <%= user.code %></p>
+                <button onclick="window.location.href='/logout'">로그아웃</button>
+            </div>
+            <div class="management-section">
+                <div class="upload-section">
+                    <h2>엑셀로 메뉴추가</h2>
+                    <button class="example-file" onclick="window.location.href='/files/product'">예시파일</button>
+                    <button class="upload-button">업로드</button>
+                </div>
+                <div class="upload-section">
+                    <h2>엑셀로 옵션추가</h2>
+                    <button class="example-file">예시파일</button>
+                    <button class="upload-button">업로드</button>
+                </div>
+                <div class="management-actions">
+                    <h2>관리</h2>
+                    <button class="download">다운로드</button>
+                    <button class="delete-all">전체삭제</button>
+                </div>
+            </div>
+        </div>        
+    </div>
+
+    <div class="footer">
+        <p>Aldebaran</p>
+    </div>
+</body>
+</html>

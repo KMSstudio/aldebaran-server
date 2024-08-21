@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const db_wholesale = require("../models/db-wholesale");
 const db_order = require("../models/db-order");
+const db_product = require("../models/db-product");
 const userSessions = require("../models/UserSessions");
 
 const output = {
@@ -61,11 +62,60 @@ const process = {
             // Render home.ejs
             res.render("wholesale/home", {
                 id: user,
-                order: order,
+                order,
             });
         },
-    },
-};
+        
+        // Render the prod.ejs file
+        prod: async (req, res) => {
+            // Get session
+            const session = req.cookies.session;
+            let id = 'none';
+            let code = '';
+
+            if (session) {
+                try {
+                    const result = await userSessions.checkSession(session, 'W');
+                    if (result.success) { id = result.id; code = result.code; }
+                } catch (error) { console.error('Session validation error:', error); }
+            }
+            if (id === 'none') { return res.status(401).render("wholesale/login", { message: "Please log in first." }); }
+            const user = { id, code };
+
+            // Get products
+            const productData = await db_product.requestProduct(code);
+            const prod = { prods: [], msg: '', success: true};
+            try {
+                if (productData.success) {
+                    // refactoring
+                    prod.prods = productData.products.map(item => ({
+                        code: item.code,
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        minCnt: item.minCnt,
+                        unitCnt: item.unitCnt,
+                        opt: item.opt
+                    }));
+                } else {
+                    prod.msg = `cannot request data: ${productData.message}`
+                    prod.success = false;
+                }
+            } catch (error) {
+                console.error('Product retrieval error:', error);
+                prod.msg = 'cannot request data: Server error';
+                prod.success = false;
+            }
+
+            // Render prod.ejs
+            res.render("wholesale/prod", {
+                user,
+                prod,
+            });
+        },
+
+    }, // wholesale
+}; // process
 
 const wholesale = {
     // regist user
@@ -158,10 +208,40 @@ const session = {
     }
 };
 
+const product = {
+    push: async (req, res) => {
+        let { code, name, price, minCnt, unitCnt, opt } = req.body;
+
+        // !Code
+        if (!code) {
+            const session = req.cookies.session;
+            if (session) {
+                try {
+                    const result = await userSessions.checkSession(session, 'W');
+                    if (result.success) { code = result.code; }
+                } catch (error) {
+                    console.error('Session validation error:', error);
+                    return res.status(500).json({ success: false, code: 2100, message: 'Internal server error during session validation.', error });
+                }
+            }
+        }
+
+        if (!code || !name || !price) { return res.status(400).json({ success: false, code: 4001, message: 'Name and price are required.' }); }
+        try {
+            const result = await db_product.createProduct(code, { name, price, minCnt, unitCnt, opt });
+            return res.json(result);
+        } catch (error) {
+            console.error('Error creating product:', error);
+            return res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error });
+        }
+    }
+};
+
 module.exports = {
     output,
     process,
     wholesale,
     order,
+    product,
     session,
 };

@@ -8,6 +8,8 @@
 .order-info {
     flex: 3;
     margin-right: 20px;
+    padding: 20px;
+    border-radius: 8px;
 }
 
 .order-info h2 {
