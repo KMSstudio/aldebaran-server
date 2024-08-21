@@ -8,20 +8,7 @@
     <link rel="stylesheet" href="/css/wholesale/home.css">
 </head>
 <body>
-    <div class="header">
-        <div class="logo-section">
-            <div class="logo">logo</div>
-            <div class="logo">logo</div>
-        </div>
-        <div class="menu-section">
-            <a href="/wholesale/prod">상품등록</a>
-            <a href="#">주문안내</a>
-            <a href="#">접속량통계</a>
-        </div>
-        <div class="user-info">
-            <span><%= id %> v</span>
-        </div>
-    </div>
+    <%- include('wholesale/partials/header') %>
 
     <div class="content">
         <div class="order-info">
@@ -66,8 +53,6 @@
         </div>
     </div>
 
-    <div class="footer">
-        <p>Aldebaran</p>
-    </div>
+    <%- include('wholesale/partials/footer') %>
 </body>
 </html>

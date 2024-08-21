@@ -30,4 +30,8 @@ router.post("/order/push", ctrl.order.push);
 // Product
 router.post("/product/push", ctrl.product.push);
 
+// Public, static files
+router.get("/file/product", ctrl.output.file.product);
+router.get("/file/option", ctrl.output.file.option);
+
 module.exports = router;

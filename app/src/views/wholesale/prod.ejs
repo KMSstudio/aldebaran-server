@@ -8,27 +8,14 @@
     <link rel="stylesheet" href="/css/wholesale/prod.css">
 </head>
 <body>
-    <div class="header">
-        <div class="logo-section">
-            <div class="logo">logo</div>
-            <div class="logo">logo</div>
-        </div>
-        <div class="menu-section">
-            <a href="/wholesale/prod">상품등록</a>
-            <a href="#">주문안내</a>
-            <a href="#">접속량통계</a>
-        </div>
-        <div class="user-info">
-            <span><%= user.id %> v</span>
-        </div>
-    </div>
+    <%- include('wholesale/partials/header') %>
 
     <div class="content">
         <div class="product-info">
             <h2><%= user.id %>의 상품</h2>
             <div class="prod-toggle">
-                <button>상품</button>
-                <button>옵션</button>
+                <button onclick="window.location.href='/wholesale/prod'">상품</button>
+                <button onclick="window.location.href='/wholesale/opt'">옵션</button>
             </div>
 
             <% if (!prod.success) { %>
@@ -50,7 +37,7 @@
                     <tbody>
                         <% prod.prods.forEach(function(item) { %>
                             <tr>
-                                <td><%= item.code %></td>
+                                <td><%= item.id %></td>
                                 <td><%= item.name %></td>
                                 <td><%= item.price.toLocaleString() %></td>
                                 <td><%= item.minCnt %></td>
@@ -71,12 +58,12 @@
             <div class="management-section">
                 <div class="upload-section">
                     <h2>엑셀로 메뉴추가</h2>
-                    <button class="example-file" onclick="window.location.href='/files/product'">예시파일</button>
+                    <button class="example-file" onclick="window.location.href='/file/product'">예시파일</button>
                     <button class="upload-button">업로드</button>
                 </div>
                 <div class="upload-section">
                     <h2>엑셀로 옵션추가</h2>
-                    <button class="example-file">예시파일</button>
+                    <button class="example-file" onclick="window.location.href='/file/option'">예시파일</button>
                     <button class="upload-button">업로드</button>
                 </div>
                 <div class="management-actions">
@@ -88,8 +75,6 @@
         </div>        
     </div>
 
-    <div class="footer">
-        <p>Aldebaran</p>
-    </div>
+    <%- include('wholesale/partials/footer') %>
 </body>
 </html>
