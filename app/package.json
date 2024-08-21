@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "aws-sdk": "^2.1675.0",
+    "axios": "^1.7.2",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.4",
+    "ws": "^8.18.0"
+  },
+  "name": "atrs",
+  "version": "1.0.0",
+  "description": "antares project",
+  "main": "app.js",
+  "bin": {
+    "atrs": "bin/www.js"
+  },
+  "scripts": {
+    "start": "nodemon ./bin/www.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MyeongSeok Kang",
+  "license": "MIT"
+}

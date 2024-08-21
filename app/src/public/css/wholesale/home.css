@@ -1,0 +1,40 @@
+/* Content Section */
+.content {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+}
+
+.order-info {
+    flex: 3;
+    margin-right: 20px;
+}
+
+.order-info h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.order-count {
+    color: red;
+    font-size: 1.2em;
+    margin-left: 10px;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.order-table th,
+.order-table td {
+    border: 1px solid #333;
+    padding: 10px;
+    text-align: left;
+}
+
+.order-table th {
+    background-color: #333;
+    color: white;
+}

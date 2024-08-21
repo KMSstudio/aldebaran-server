@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도매 사용자 회원가입</title>
+    <link rel="stylesheet" href="/css/wholesale/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>도매 사용자 회원가입</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="id">사용자 ID</label>
+                <input type="text" id="id" name="id" required>
+            </div>
+            <div class="form-group">
+                <label for="pw">비밀번호</label>
+                <input type="password" id="pw" name="pw" required>
+            </div>
+            <div class="form-group">
+                <label for="name">이름</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="address">주소</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">전화번호</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">회원가입</button>
+            </div>
+        </form>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script src="/js/wholesale/regist.js"></script>
+</body>
+</html>

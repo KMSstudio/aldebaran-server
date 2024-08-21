@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+    <link rel="stylesheet" href="/css/wholesale/style.css">
+    <link rel="stylesheet" href="/css/wholesale/home.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo-section">
+            <div class="logo">logo</div>
+            <div class="logo">logo</div>
+        </div>
+        <div class="menu-section">
+            <a href="#">상품등록</a>
+            <a href="#">주문안내</a>
+            <a href="#">접속량통계</a>
+        </div>
+        <div class="user-info">
+            <span><%= id %> v</span>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="order-info">
+            <h2>주문안내</h2>
+            <% if (order.length === 0) { %>
+                <p>들어온 주문이 아직 없습니다.</p>
+            <% } else { %>
+                <p class="order-count">(<%= order.length %>)</p>
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th>소매상</th>
+                            <th>상품</th>
+                            <th>금액</th>
+                            <th>날짜</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% order.forEach(function(o) { %>
+                            <tr>
+                                <td><%= o.customer %></td>
+                                <td><%= o.product.join(", ") %></td>
+                                <td><%= o.price.toLocaleString() %></td>
+                                <td><%= o.date %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } %>
+        </div>
+        <div class="sidebar">
+            <div class="user-profile">
+                <p><%= id %></p>
+                <p>최초가입일 : YYYYMM</p>
+                <button onclick="window.location.href='/logout'">로그아웃</button>
+            </div>
+            <div class="traffic-stats">
+                <p>접속량통계</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Aldebaran</p>
+    </div>
+</body>
+</html>
