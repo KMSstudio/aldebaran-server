@@ -87,8 +87,28 @@ const WrequestOrder = async (code) => {
     }
 };
 
+// Request all orders by retail code using GSI
+const RrequestOrder = async (code) => {
+    const params = {
+        TableName: tableName,
+        IndexName: "retail-index",  // GSI name
+        KeyConditionExpression: "retail = :retailCode",
+        ExpressionAttributeValues: {
+            ":retailCode": code
+        }
+    };
+
+    try {
+        const data = await dynamoDB.query(params).promise();
+        return { success: true, code: 0, orders: data.Items, message: 'Orders retrieved successfully.' };
+    } catch (error) {
+        return { success: false, code: 2103, message: 'Error retrieving orders', error };
+    }
+};
+
 module.exports = {
     createOrder,
     deleteOrder,
     WrequestOrder,
+    RrequestOrder,
 };
