@@ -9,60 +9,62 @@
 </head>
 <body>
     <%- include('partial/header') %>
-
-    <div class="content">
-        <div class="product-info">
-            <h2><%= user.id %>의 상품</h2>
-            <div class="prod-toggle">
-                <button onclick="window.location.href='/wholesale/prod'">상품</button>
-                <button onclick="window.location.href='/wholesale/opt'">옵션</button>
-            </div>
-        
-            <% if (!prod.success) { %>
-                <p class="error-msg"><%= prod.msg %></p>
-            <% } else if (prod.prods.length === 0) { %>
-                <p>prods가 비어있습니다.</p>
-            <% } else { %>
-                <table class="prod-table">
-                    <thead>
-                        <tr>
-                            <th>상품코드</th>
-                            <th>상품명</th>
-                            <th>단가</th>
-                            <th>최소주문수량</th>
-                            <th>단위주문수량</th>
-                            <th>옵션</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% prod.prods.forEach(function(item) { %>
-                            <tr>
-                                <td><%= item.id %></td>
-                                <td><%= item.name %></td>
-                                <td><%= item.price.toLocaleString() %></td>
-                                <td><%= item.minCnt %></td>
-                                <td><%= item.unitCnt %></td>
-                                <td><%= item.opt || '-' %></td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            <% } %>
-        
-            <!-- Product Actions -->
-            <div class="product-actions">
-                <div class="action-group">
-                    <input type="text" id="prodCode" placeholder="상품코드">
-                    <input type="text" id="prodName" placeholder="상품명">
-                    <input type="text" id="prodPrice" placeholder="단가">
-                    <input type="text" id="minCnt" placeholder="최소주문수량">
-                    <input type="text" id="unitCnt" placeholder="단위주문수량">
-                    <input type="text" id="opt" placeholder="옵션">
+    
+    <div class="container">
+        <div class="content">
+            <div class="product-info">
+                <h2><%= user.id %>의 상품</h2>
+                <div class="prod-toggle">
+                    <button onclick="window.location.href='/wholesale/prod'">상품</button>
+                    <button onclick="window.location.href='/wholesale/opt'">옵션</button>
                 </div>
-                <div class="action-buttons">
-                    <button id="updateButton">update</button>
-                    <button id="createButton">create</button>
-                    <div id="resultMessage" class="result-message"></div>
+            
+                <% if (!prod.success) { %>
+                    <p class="error-msg"><%= prod.msg %></p>
+                <% } else if (prod.prods.length === 0) { %>
+                    <p>prods가 비어있습니다.</p>
+                <% } else { %>
+                    <table class="prod-table">
+                        <thead>
+                            <tr>
+                                <th>상품코드</th>
+                                <th>상품명</th>
+                                <th>단가</th>
+                                <th>최소주문수량</th>
+                                <th>단위주문수량</th>
+                                <th>옵션</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% prod.prods.forEach(function(item) { %>
+                                <tr>
+                                    <td><%= item.id %></td>
+                                    <td><%= item.name %></td>
+                                    <td><%= item.price.toLocaleString() %></td>
+                                    <td><%= item.minCnt %></td>
+                                    <td><%= item.unitCnt %></td>
+                                    <td><%= item.opt || '-' %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+            
+                <!-- Product Actions -->
+                <div class="product-actions">
+                    <div class="action-group">
+                        <input type="text" id="prodCode" placeholder="상품코드">
+                        <input type="text" id="prodName" placeholder="상품명">
+                        <input type="text" id="prodPrice" placeholder="단가">
+                        <input type="text" id="minCnt" placeholder="최소주문수량">
+                        <input type="text" id="unitCnt" placeholder="단위주문수량">
+                        <input type="text" id="opt" placeholder="옵션">
+                    </div>
+                    <div class="action-buttons">
+                        <button id="updateButton">update</button>
+                        <button id="createButton">create</button>
+                        <div id="resultMessage" class="result-message"></div>
+                    </div>
                 </div>
             </div>
         </div>

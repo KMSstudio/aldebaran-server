@@ -30,7 +30,7 @@ const api = {
                     secure: false,
                     maxAge: 3600000
                 });
-                res.json({ ...result, session: reqSession.session });
+                res.json({ ...result });
             } catch (error) { res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error }); }
         },
     }, //wholesale

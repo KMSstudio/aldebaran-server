@@ -4,6 +4,7 @@ const userSessions = require("../models/UserSessions");
 
 const db_wholesale = require("../models/db-wholesale");
 const db_retail = require("../models/db-retail");
+const db_xcode = require("../models/db-xcode");
 const db_order = require("../models/db-order");
 const db_product = require("../models/db-product");
 
@@ -14,40 +15,28 @@ const process = {
         home: async (req, res) => {
             // Get session
             const session = req.cookies.session;
-            let id = 'none';
-            let code = '0000';
+            const user = { id: 'none', code: '', name: '' };
 
             if (session) {
                 try {
                     const result = await userSessions.checkSession(session, 'W');
-                    if (result.success) { id = result.id; code = result.code; }
+                    if (result.success) { user.id = result.id; user.code = result.code; user.name = result.name; }
                 } catch (error) { console.error('Session validation error:', error); }
             }
-            const user = { id, code };
+            if (user.id === 'none') { return res.status(401).render("wholesale/login", { message: "Please log in first." }); }
 
             // Get order
             const order = { orders: [], msg: '', success: true };
-            if (id !== 'none') {
-                try {
-                    const orderData = await db_order.WrequestOrder(code);
-                    if (orderData.success) {
-                        order.orders = orderData.orders.map(record => ({
-                            customer: record.retailName,
-                            product: record.content.map(item => `${item.name} ${item.cnt}`),
-                            price: record.price,
-                            date: record.date
-                        }));
-                    } else { 
-                        order.msg = `cannot request data: ${orderData.message}`;
-                        order.success = false;
-                    }
-                } catch (error) {
-                    console.error('Order retrieval error:', error);
-                    order.msg = 'cannot request data: Server error';
-                    order.success = false;
-                }
+            const orderData = await db_order.WrequestOrder(user.code);
+            if (orderData.success) {
+                order.orders = orderData.orders.map(record => ({
+                    retail: record.retailName,
+                    product: record.content.map(item => `${item.name} ${item.cnt}`),
+                    price: record.price,
+                    date: record.date
+                }));
             } else { 
-                order.msg = 'User session is invalid or expired.';
+                order.msg = `cannot request data: ${orderData.message}`;
                 order.success = false;
             }
 
@@ -62,20 +51,18 @@ const process = {
         prod: async (req, res) => {
             // Get session
             const session = req.cookies.session;
-            let id = 'none';
-            let code = '';
+            const user = { id: 'none', code: '', name: '' };
 
             if (session) {
                 try {
                     const result = await userSessions.checkSession(session, 'W');
-                    if (result.success) { id = result.id; code = result.code; }
+                    if (result.success) { user.id = result.id; user.code = result.code; user.name = result.name; }
                 } catch (error) { console.error('Session validation error:', error); }
             }
-            if (id === 'none') { return res.status(401).render("wholesale/login", { message: "Please log in first." }); }
-            const user = { id, code };
+            if (user.id === 'none') { return res.status(401).render("wholesale/login", { message: "Please log in first." }); }
 
             // Get products
-            const productData = await db_product.requestProduct(code);
+            const productData = await db_product.requestProduct(user.code);
             const prod = { prods: [], msg: '', success: true};
             if (productData.success) {
                 // refactoring
@@ -106,7 +93,16 @@ const process = {
     shop: {
         // Render main.ejs file
         main: async (req, res) => {
-            const { code } = req.params;
+            const { xcode } = req.params;
+
+            //Request code by xcode
+            const codeData = await db_xcode.getXcode(xcode);
+            if (!codeData.success){
+                ///////////////////////////////////////// invalid xcode
+                return res.redirect("/");
+            }
+            const code = codeData.code;
+
             // Request products by Wholesale code
             const prod = { prods: [], success: true, msg: '' }
             const productData = await db_product.requestProduct(code);
@@ -141,7 +137,7 @@ const process = {
                         retail.id = result.id;
                         retail.code = result.code;
                         retail.name = result.name;
-                        await db_retail.addShop(retail.id, wholesale.code, wholesale.name);
+                        await db_retail.addShop(retail.id, wholesale.xcode, wholesale.name);
                     }
                 } catch (error) { console.error('Session validation error:', error); }
             }

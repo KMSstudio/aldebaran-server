@@ -3,6 +3,14 @@
 * sidebar for product and option page
 */
 
+.sidebar {
+    flex: 1;
+    justify-content: space-between;
+    background-color: #111111;
+    padding: 20px;
+    border-left: 1px solid #333;
+}
+
 .sidebar .management-section {
     margin-top: 20px;
 }

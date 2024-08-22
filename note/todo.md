@@ -3,8 +3,6 @@
 .xlsx 로 메뉴 올리기  
 .xlsx 로 옵션 올리기  
 option 기능
-retail 로그인 회원가입  
-retail 주문조회  
 shop url dirtify 하기
 
 **far**  

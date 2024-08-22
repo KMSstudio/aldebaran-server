@@ -13,6 +13,8 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.AWS_WHOLESALE_USER;
 
 const Sequence = require("./Sequence");
+const Hash = require("./Hash");
+const db_xcode = require("./db-xcode");
 
 // Check if user ID is valid
 const isValid = async (id) => {
@@ -75,6 +77,7 @@ const createUser = async (id, pw, user) => {
     if (existingUserCheck.exist) { return { success: false, code: 2002, message: 'User ID already exists.' }; }
     if (isTooEasyPW(pw)) { return { success: false, code: 2003, message: 'Password cannot be "0000".' }; }
     const code = Sequence.nextSequence('user', -1);
+    const xcode = Hash.hashString(code);
 
     const params = {
         TableName: tableName,
@@ -82,15 +85,20 @@ const createUser = async (id, pw, user) => {
             id,
             pw,
             code,
+            xcode,
             ...user
         },
     };
 
     try {
+        // Save the user data in the DynamoDB table
         await dynamoDB.put(params).promise();
+        // Create an entry in the xcode table
+        const xcodeResult = await db_xcode.createXcode(xcode, code);
+        if (!xcodeResult.success) { return { success: false, code: 2106, message: 'User created, but failed to create xcode record.', error: xcodeResult.error }; }
         delete params.Item.pw;
         return { success: true, code: 0, user: params.Item, message: 'User created successfully.' };
-    } catch (error) { return { success: false, code: 6024, message: 'Error creating user', error }; }
+    } catch (error) { return { success: false, code: 2101, message: 'Error creating user', error }; }
 };
 
 module.exports = {

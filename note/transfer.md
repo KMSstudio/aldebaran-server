@@ -1,5 +1,55 @@
 ## Data transfer - Render .ejs
-**render shop (shop/code)**
+### render wholesale/main
+
+    {
+        user: {
+            id: ,
+            code: ,
+            name: ,
+        },
+        order: {
+            success: (true/false),
+            msg: "",
+            orders: [
+                {
+                    retail: record.retailName,,
+                    product: order.content.map(item => `${item.name} ${item.cnt}`),
+                    price: order.price,
+                    date: order.date,
+                    status: order.status
+                },
+                ...
+            ]
+        }
+    }
+
+### render wholesale/prod
+
+    {
+        user: {
+            id: ,
+            code: ,
+            name: ,
+        },
+        prod: {
+            success: (true/false),
+            msg: "",
+            prods: [
+                {
+                    code: item.code,
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    minCnt: item.minCnt,
+                    unitCnt: item.unitCnt,
+                    opt: item.opt
+                },
+                ...
+            ]
+        }
+    }
+
+### render shop (shop/code)
 
     {
         wholesale: {
@@ -23,7 +73,7 @@
         }
     }
 
-**render retail/main (retail/main)**
+### render retail/main (retail/main)
 
     {
         retail: {
@@ -52,7 +102,7 @@
     }
 
 ## Data transfer - Order.ejs
-**order request (/order/push)**
+### order request (/order/push)
 
     {
         wholesale: {

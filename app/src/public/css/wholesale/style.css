@@ -16,6 +16,12 @@ body {
     width: 100%;
 }
 
+.content {
+    display: flex;
+    flex: 3;
+    padding: 20px;
+}
+
 /* Sidebar */
 .sidebar {
     flex: 1;

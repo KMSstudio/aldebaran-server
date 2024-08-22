@@ -14,6 +14,7 @@
 2103, env.AWS_ORDER_LIST에 문제가 있음  
 2104, env.AWS_PRODUCT_LIST에 문제가 있음  
 2105, env.AWS_RETAIL_USER에 문제가 있음  
+2106, env.AWS_XCODE_LIST에 문제가 있음
 
 **problem about argument**  
 2201, user id가 존재하지 않음  

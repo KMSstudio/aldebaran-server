@@ -56,6 +56,6 @@ router.post("/retail/login", ctrl.api.retail.login);
 router.get("/retail/main", ctrl.process.retail.main);
 
 // Shop webpage
-router.get("/shop/:code", ctrl.process.shop.main);
+router.get("/shop/:xcode", ctrl.process.shop.main);
 
 module.exports = router;

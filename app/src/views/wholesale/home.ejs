@@ -32,7 +32,7 @@
                         <tbody>
                             <% order.orders.forEach(function(o) { %>
                                 <tr>
-                                    <td><%= o.customer %></td>
+                                    <td><%= o.retail %></td>
                                     <td><%= o.product.join(", ") %></td>
                                     <td><%= o.price.toLocaleString() %></td>
                                     <td><%= o.date %></td>
@@ -57,7 +57,6 @@
             </div>
         </div>
     </div>
-
     <%- include('partial/footer') %>
 </body>
 </html>
