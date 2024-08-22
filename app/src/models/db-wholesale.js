@@ -28,18 +28,24 @@ const isValid = async (id) => {
     } catch (error) { return { success: false, code: 2101, message: 'Error checking wholesale user table', error }; }
 };
 
-// Get user information by ID
-const getUser = async (id) => {
+// Get user information by Code
+const getUser = async (code) => {
     const params = {
         TableName: tableName,
-        Key: { id }
+        IndexName: "code-index",
+        KeyConditionExpression: "code = :code",
+        ExpressionAttributeValues: { ":code": code }
     };
 
     try {
-        const data = await dynamoDB.get(params).promise();
-        if (!data.Item) { return { success: false, code: 2201, message: 'User ID does not exist.' }; }
-        else { delete data.Item.pw; return { success: true, code: 0, user: data.Item, message: 'Login successful.' }; }
-    } catch (error) { return { success: false, code: 2101, message: 'Error checking wholesale user table', error }; }
+        const data = await dynamoDB.query(params).promise();
+        if (data.Items.length === 0) { return { success: false, code: 2201, message: 'User code does not exist.' }; }
+        else { 
+            const user = data.Items[0];
+            delete user.pw; 
+            return { success: true, code: 0, user, message: 'User retrieved successfully.' }; 
+        }
+    } catch (error) { return { success: false, code: 2101, message: 'Error retrieving user by code.', error }; }
 };
 
 // Request user information by Id and password

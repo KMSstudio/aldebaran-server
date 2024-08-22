@@ -13,6 +13,10 @@ router.get("/test/order", (req, res) => { res.render("test/order"); });
 // Session
 router.post("/session/check", ctrl.session.checkSession)
 
+//  ========================================  //
+//              wholesale utility             //
+//  ========================================  //
+
 // Wholesale user login
 router.get("/wholesale/regist", ctrl.output.wholesale.regist);
 router.post("/wholesale/regist", ctrl.wholesale.regist);
@@ -24,9 +28,6 @@ router.post("/wholesale/login", ctrl.wholesale.login);
 router.get("/wholesale/home", ctrl.process.wholesale.home);
 router.get("/wholesale/prod", ctrl.process.wholesale.prod);
 
-// Order
-router.post("/order/push", ctrl.order.push);
-
 // Product
 router.post("/product/push", ctrl.product.push);
 router.post("/product/reset", ctrl.product.reset);
@@ -35,5 +36,15 @@ router.post("/product/update/:id", ctrl.product.update);
 // Public, static files
 router.get("/file/product", ctrl.output.file.product);
 router.get("/file/option", ctrl.output.file.option);
+
+// Order
+router.post("/order/push", ctrl.order.push);
+
+//  =====================================  //
+//              retail utility             //
+//  =====================================  //
+
+// Shop webpage
+router.get("/shop/:code", ctrl.process.shop.main);
 
 module.exports = router;

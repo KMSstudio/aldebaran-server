@@ -38,6 +38,7 @@ const output = {
 }
 
 const process = {
+    // Wholesale mainpage and product page
     wholesale: {
         // Render the home.ejs file
         home: async (req, res) => {
@@ -135,6 +136,50 @@ const process = {
         },
 
     }, // wholesale
+
+    // Shop main page
+    shop: {
+        // Render main.ejs file
+        main: async (req, res) => {
+            const { code } = req.params;
+            // Request products by Wholesale code
+            const prod = { prods: [], success: true, msg: '' }
+            const productData = await db_product.requestProduct(code);
+            if (!productData.success) {
+                prod.success = false;
+                prod.msg = `Fail to get product data: ${productData.message}`;
+            }
+
+            // Make prod.prods data (item: [])
+            prod.prods = productData.products.map(item => ({
+                ...item,
+                opt: [] // Hardcoding opt values to an empty array
+            }));
+
+            // Request wholesale data by code
+            const wholesaleData = await db_wholesale.getUser(code);
+            if (!wholesaleData.success || !wholesaleData.user) { return res.redirect("/"); }
+            const wholesale = {
+                id: wholesaleData.user.id,
+                code: code,
+                name: wholesaleData.user.name
+            };
+
+            // Retail values
+            const retail = {
+                id: "sample",
+                code: "BBB",
+                name: "sample retailer"
+            };
+            
+            // Render shop/main.ejs
+            res.render("shop/main", {
+                wholesale,
+                retail,
+                prod
+            });
+        }
+    } // shop
 }; // process
 
 const wholesale = {

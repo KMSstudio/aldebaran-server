@@ -1,0 +1,148 @@
+/* General Body Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000000;
+    color: #FFFFFF;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000;
+    padding: 10px 20px;
+    border-bottom: 1px solid #333;
+}
+
+.header .logo-section {
+    display: flex;
+    gap: 10px;
+}
+
+.header .logo {
+    background-color: #4a90e2;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.header h1 {
+    text-align: center;
+    flex: 1;
+}
+
+.header .user-info {
+    font-size: 1.2em;
+    text-align: right;
+}
+
+/* Content Section */
+.content {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Product List Styles */
+.product-list {
+    flex: 3;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.prod-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.prod-table th,
+.prod-table td {
+    border: 1px solid #333;
+    padding: 10px;
+    text-align: left;
+}
+
+.prod-table th {
+    background-color: #333;
+    color: white;
+}
+
+/* Option Styles */
+.option-group {
+    margin-bottom: 10px;
+}
+
+.option-group label {
+    font-weight: bold;
+}
+
+.option-group div {
+    margin-left: 10px;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    flex: 1;
+    background-color: #1c1c1c;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.user-profile {
+    text-align: center;
+}
+
+.cart-section {
+    flex: 1;
+}
+
+.cart-section h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.cart-items {
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.remove-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.remove-btn:hover {
+    background-color: #ff3333;
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #000000;
+    border-top: 1px solid #333;
+    color: #FFFFFF;
+}
