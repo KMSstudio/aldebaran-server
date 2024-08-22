@@ -4,6 +4,7 @@ const ShopQR = require("../models/shop-qr");
 const userSessions = require("../models/UserSessions");
 
 const db_wholesale = require("../models/db-wholesale");
+const db_retail = require("../models/db-retail");
 const db_order = require("../models/db-order");
 const db_product = require("../models/db-product");
 
@@ -21,7 +22,7 @@ const api = {
             try { 
                 const result = await db_wholesale.reqUser(id, pw);
                 if (result.code != 0){ res.json(result); return; }
-                const reqSession = await userSessions.createSession({ code: result.user.code, id: result.user.id }, 'W');
+                const reqSession = await userSessions.createSession({ code: result.user.code, id: result.user.id, name: result.user.name }, 'W');
                 if (reqSession.code != 0){ res.json(reqSession); return; }
                 // Save the session in a cookie
                 res.cookie('session', reqSession.session, {
@@ -220,7 +221,33 @@ const api = {
                 return res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error });
             }
         }
-    } // file
+    }, // file
+
+    retail: {
+        // regist user
+        regist: async (req, res) => {
+            const { id, pw, ...userData } = req.body;
+            try { const result = await db_retail.createUser(id, pw, { ...userData }); res.json(result); }
+            catch (error) { res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error }); }
+        },
+        // login and get user info
+        login : async (req, res) => {
+            const { id, pw } = req.body;
+            try { 
+                const result = await db_retail.reqUser(id, pw);
+                if (result.code != 0){ res.json(result); return; }
+                const reqSession = await userSessions.createSession({ code: result.user.code, id: result.user.id, name: result.user.name }, 'R');
+                if (reqSession.code != 0){ res.json(reqSession); return; }
+                // Save the session in a cookie
+                res.cookie('session', reqSession.session, {
+                    httpOnly: true,
+                    secure: false,
+                    maxAge: 3600000
+                });
+                res.json({ ...result, session: reqSession.session });
+            } catch (error) { res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error }); }
+        },
+    }, //retail
 }; // api
 
 module.exports = api;

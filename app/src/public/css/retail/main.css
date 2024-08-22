@@ -1,0 +1,180 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000000;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000;
+    padding: 10px 20px;
+    border-bottom: 1px solid #333;
+    position: relative;
+}
+
+.header .logo-section {
+    display: flex;
+    gap: 10px;
+}
+
+.header .logo {
+    background-color: #4a90e2;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.header .menu-section {
+    display: flex;
+    justify-content: center;
+    position: absolute; /* 부모 요소를 기준으로 절대 위치 */
+    left: 50%; /* 부모 요소의 왼쪽에서 50% */
+    transform: translateX(-50%); /* 자신의 너비의 50%만큼 왼쪽으로 이동 */
+    gap: 30px;
+}
+
+.header .menu-section a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-bottom: 2px solid transparent;
+}
+
+.header .menu-section a:hover {
+    border-bottom: 2px solid white;
+}
+
+.header .user-info {
+    font-size: 1.2em;
+}
+
+/* Main Content and Sidebar Layout */
+.container {
+    display: flex;
+    flex: 1;
+    width: 100%;
+}
+
+/* Main Content Section */
+.content {
+    flex: 3;
+    padding: 20px;
+}
+
+.order-info {
+    margin-right: 20px;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.order-info h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.order-count {
+    color: red;
+    font-size: 1.2em;
+    margin-left: 10px;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.order-table th,
+.order-table td {
+    border: 1px solid #333;
+    padding: 10px;
+    text-align: left;
+}
+
+.order-table th {
+    background-color: #333;
+    color: white;
+}
+
+/* Sidebar Section */
+aside {
+    flex: 1;
+    background-color: #111111;
+    padding: 20px;
+    border-left: 1px solid #333;
+    box-sizing: border-box;
+    height: auto;
+}
+
+.user-profile {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    /* border-bottom: 1px solid #333; */
+}
+
+.user-profile p {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.user-profile button {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid white;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.user-profile button:hover {
+    background-color: #333;
+}
+
+/* Recent Access Section */
+.recent-access {
+    margin-top: 20px;
+    padding-top: 20px;
+    /* border-top: 1px solid #333; */
+}
+
+.recent-access h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.recent-access p {
+    margin: 5px 0;
+}
+
+.recent-access p a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.recent-access p a:hover {
+    text-decoration: underline;
+}
+
+/* Footer Section */
+.footer {
+    background-color: #111111;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid #333;
+    margin-top: auto;
+}

@@ -1,7 +1,7 @@
 /* Content Section */
 .content {
     display: flex;
-    flex: 1;
+    flex: 3;
     padding: 20px;
 }
 

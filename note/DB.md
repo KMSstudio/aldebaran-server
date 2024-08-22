@@ -9,6 +9,17 @@
     name 도매처 이름. 소매자에게 표시될 이름
     code 도매처 코드. product와 option, link는 code를 중심으로 생성됨
 
+**retailer**
+
+    id* 소매자의 id
+    pw 도매자의 password
+    address 주소
+    phoneNumber 전화번호
+    name 소매처 이름. 소매자에게 표시될 이름
+    code 소매처 코드. order는 code를 중심으로 생성됨
+    connShop 접속한 회사
+
+
 **order**
 
     wholesale* 도매처 코드

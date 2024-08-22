@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wholesale Main Page</title>
-    <link rel="stylesheet" href="/css/wholesale/style.css">
-    <link rel="stylesheet" href="/css/wholesale/home.css">
+    <title>Retail Main Page</title>
+    <link rel="stylesheet" href="/css/retail/main.css">
 </head>
 <body>
-    <%- include('partial/header') %>
+    <div class="header">
+        <div class="logo-section">
+            <div class="logo">logo</div>
+            <div class="logo">logo</div>
+        </div>
+        <div class="user-info">
+            <span><%= retail.id %></span>
+        </div>
+    </div>
 
     <div class="container">
         <div class="content">
@@ -17,25 +24,27 @@
                 <% if (!order.success) { %>
                     <p><%= order.msg %></p>
                 <% } else if (order.orders.length === 0) { %>
-                    <p>들어온 주문이 아직 없습니다.</p>
+                    <p>접수된 주문이 아직 없습니다.</p>
                 <% } else { %>
                     <p class="order-count">(<%= order.orders.length %>)</p>
                     <table class="order-table">
                         <thead>
                             <tr>
-                                <th>소매상</th>
+                                <th>도매상</th>
                                 <th>상품</th>
                                 <th>금액</th>
                                 <th>날짜</th>
+                                <th>상태</th>
                             </tr>
                         </thead>
                         <tbody>
                             <% order.orders.forEach(function(o) { %>
                                 <tr>
-                                    <td><%= o.customer %></td>
+                                    <td><%= o.wholesale %></td>
                                     <td><%= o.product.join(", ") %></td>
                                     <td><%= o.price.toLocaleString() %></td>
                                     <td><%= o.date %></td>
+                                    <td><%= o.status %></td>
                                 </tr>
                             <% }) %>
                         </tbody>
@@ -43,21 +52,28 @@
                 <% } %>
             </div>
         </div>
-        <div class="sidebar">
+
+        <aside class="sidebar">
             <div class="user-profile">
-                <p><%= user.id %></p>
-                <p>최초가입일 : YYYYMM</p>
+                <h2><%= retail.name %></h2>
+                <button onclick="window.location.href='/retail/info'">정보</button>
                 <button onclick="window.location.href='/logout'">로그아웃</button>
             </div>
-            <div class="traffic-stats">
-                <p>접속량통계</p>
+            <div class="recent-access">
+                <h3>최근접속</h3>
+                <% if (conn && conn.length > 0) { %>
+                    <% conn.forEach(function(shop) { %>
+                        <p><a href="/shop/<%= shop.xcode %>"><%= shop.name %></a></p>
+                    <% }) %>
+                <% } else { %>
+                    <p>접속 기록이 없습니다.</p>
+                <% } %>
             </div>
-            <div class="qr-code-section">
-                <button onclick="window.location.href='/file/shopqr?code=<%= user.code %>'">QR코드 생성</button>
-            </div>
-        </div>
+        </aside>
     </div>
 
-    <%- include('partial/footer') %>
+    <footer class="footer">
+        <p>Aldebaran</p>
+    </footer>
 </body>
 </html>

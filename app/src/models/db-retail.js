@@ -27,7 +27,27 @@ const isValid = async (id) => {
             ? { success: true, code: 0, exist: true, message: 'User exists.' } 
             : { success: true, code: 0, exist: false, message: 'User does not exist.' };
     } catch (error) {
-        return { success: false, code: 2101, message: 'Error checking retail user table', error };
+        return { success: false, code: 2105, message: 'Error checking retail user table', error };
+    }
+};
+
+// Get user information by ID (without password)
+const getUserById = async (id) => {
+    const params = {
+        TableName: tableName,
+        Key: { id }
+    };
+
+    try {
+        const data = await dynamoDB.get(params).promise();
+        if (!data.Item) {
+            return { success: false, code: 2201, message: 'User ID does not exist.' };
+        } else {
+            delete data.Item.pw;
+            return { success: true, code: 0, user: data.Item, message: 'User retrieved successfully.' };
+        }
+    } catch (error) {
+        return { success: false, code: 2105, message: 'Error retrieving user by ID.', error };
     }
 };
 
@@ -48,7 +68,7 @@ const getUser = async (code) => {
             delete user.pw; 
             return { success: true, code: 0, user, message: 'User retrieved successfully.' }; 
         }
-    } catch (error) { return { success: false, code: 2101, message: 'Error retrieving user by code.', error }; }
+    } catch (error) { return { success: false, code: 2105, message: 'Error retrieving user by code.', error }; }
 };
 
 // Request user information by Id and password
@@ -66,9 +86,7 @@ const reqUser = async (id, pw) => {
             delete data.Item.pw;
             return { success: true, code: 0, user: data.Item, message: 'Login successful.' };
         }
-    } catch (error) {
-        return { success: false, code: 2101, message: 'Error checking retail user table', error };
-    }
+    } catch (error) { return { success: false, code: 2105, message: 'Error checking retail user table', error }; }
 };
 
 // Check whether the password is too easy
@@ -81,6 +99,7 @@ const createUser = async (id, pw, user) => {
     if (existingUserCheck.exist) return { success: false, code: 2002, message: 'User ID already exists.' };
     if (isTooEasyPW(pw)) return { success: false, code: 2003, message: 'Password cannot be "0000".' };
     const code = Sequence.nextSequence('user', -1);
+    const connShop = [];
 
     const params = {
         TableName: tableName,
@@ -88,7 +107,8 @@ const createUser = async (id, pw, user) => {
             id,
             pw,
             code,
-            ...user
+            ...user,
+            connShop,
         },
     };
 
@@ -96,12 +116,60 @@ const createUser = async (id, pw, user) => {
         await dynamoDB.put(params).promise();
         delete params.Item.pw;
         return { success: true, code: 0, user: params.Item, message: 'User created successfully.' };
-    } catch (error) {
-        return { success: false, code: 6024, message: 'Error creating user', error };
-    }
+    } catch (error) { return { success: false, code: 2105, message: 'Error creating user', error }; }
 };
 
-// 소매자 정보 삭제
+// Add a shop to the user's connected shops
+const addShop = async (id, xcode, name) => {
+    const userResponse = await getUserById(id);
+    if (!userResponse.success) return userResponse;
+    const user = userResponse.user;
+    const shopExists = user.connShop.some(shop => shop.xcode === xcode);
+
+    if (!shopExists) {
+        user.connShop.push({ xcode, name });
+        const params = {
+            TableName: tableName,
+            Key: { id },
+            UpdateExpression: "set connShop = :connShop",
+            ExpressionAttributeValues: {
+                ":connShop": user.connShop
+            }
+        };
+
+        try {
+            await dynamoDB.update(params).promise();
+            return { success: true, code: 0, message: 'Shop added successfully.' };
+        } catch (error) { return { success: false, code: 2105, message: 'Error adding shop.', error }; }
+    } else { return { success: true, code: 2005, message: 'Shop already connected.' }; }
+};
+
+// Delete a shop from the user's connected shops
+const delShop = async (id, xcode) => {
+    const userResponse = await getUserById(id);
+    if (!userResponse.success) return userResponse;
+    const user = userResponse.user;
+    const shopExists = user.connShop.some(shop => shop.xcode === xcode);
+
+    if (shopExists) {
+        user.connShop = user.connShop.filter(shop => shop.xcode !== xcode);
+        const params = {
+            TableName: tableName,
+            Key: { id },
+            UpdateExpression: "set connShop = :connShop",
+            ExpressionAttributeValues: {
+                ":connShop": user.connShop
+            }
+        };
+
+        try {
+            await dynamoDB.update(params).promise();
+            return { success: true, code: 0, message: 'Shop deleted successfully.' };
+        } catch (error) { return { success: false, code: 2105, message: 'Error deleting shop.', error }; }
+    } else { return { success: true, code: 2006, message: 'Shop not found.' }; }
+};
+
+// Delete retailer information
 const deleteUser = async (id) => {
     const params = {
         TableName: tableName,
@@ -112,7 +180,7 @@ const deleteUser = async (id) => {
         await dynamoDB.delete(params).promise();
         return { success: true, code: 0, message: 'User deleted successfully.' };
     } catch (error) {
-        return { success: false, code: 2102, message: 'Error deleting user', error };
+        return { success: false, code: 2105, message: 'Error deleting user', error };
     }
 };
 
@@ -122,4 +190,6 @@ module.exports = {
     reqUser,
     createUser,
     deleteUser,
+    addShop,
+    delShop,
 };

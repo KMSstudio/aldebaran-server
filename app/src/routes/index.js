@@ -45,6 +45,16 @@ router.post("/order/push", ctrl.api.order.push);
 //              retail utility             //
 //  =====================================  //
 
+// Retail user login
+router.get("/retail/regist", ctrl.output.retail.regist);
+router.post("/retail/regist", ctrl.api.retail.regist);
+
+router.get("/retail/login", ctrl.output.retail.login);
+router.post("/retail/login", ctrl.api.retail.login);
+
+// Retail webpage
+router.get("/retail/main", ctrl.process.retail.main);
+
 // Shop webpage
 router.get("/shop/:code", ctrl.process.shop.main);
 

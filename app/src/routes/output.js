@@ -7,13 +7,19 @@ const output = {
         res.render("index");
     },
 
-    // wholesale login and register page
+    // Wholesale login and register page
     wholesale: {
         regist: (req, res) => { res.render("wholesale/regist"); },
         login: (req, res) => { res.render("wholesale/login"); },
     },
 
-    // public file output
+    // Retail login and register page
+    retail: {
+        regist: (req, res) => { res.render("retail/regist"); },
+        login: (req, res) => { res.render("retail/login"); },
+    },
+
+    // Public file output
     file: {
         product: (req, res) => { 
             const filePath = path.join(__dirname, "../public/document/product.xlsx");

@@ -23,6 +23,34 @@
         }
     }
 
+**render retail/main (retail/main)**
+
+    {
+        retail: {
+            id: ,
+            code: ,
+            name: ,
+        },
+        order: {
+            success: (true/false),
+            msg: "",
+            orders: [
+                {
+                    wholesale: order.wholesaleName,
+                    product: order.content.map(item => `${item.name} ${item.cnt}`),
+                    price: order.price,
+                    date: order.date,
+                    status: order.status
+                },
+                ...
+            ]
+        },
+        conn: [
+            { xcode: , name: , },
+            ...
+        ]
+    }
+
 ## Data transfer - Order.ejs
 **order request (/order/push)**
 
