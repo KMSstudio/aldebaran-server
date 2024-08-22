@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/wholesale/prod.css">
 </head>
 <body>
-    <%- include('wholesale/partials/header') %>
+    <%- include('partial/header') %>
 
     <div class="content">
         <div class="product-info">
@@ -17,7 +17,7 @@
                 <button onclick="window.location.href='/wholesale/prod'">상품</button>
                 <button onclick="window.location.href='/wholesale/opt'">옵션</button>
             </div>
-
+        
             <% if (!prod.success) { %>
                 <p class="error-msg"><%= prod.msg %></p>
             <% } else if (prod.prods.length === 0) { %>
@@ -48,33 +48,27 @@
                     </tbody>
                 </table>
             <% } %>
+        
+            <!-- Product Actions -->
+            <div class="product-actions">
+                <div class="action-group">
+                    <input type="text" id="prodCode" placeholder="상품코드">
+                    <input type="text" id="prodName" placeholder="상품명">
+                    <input type="text" id="prodPrice" placeholder="단가">
+                    <input type="text" id="minCnt" placeholder="최소주문수량">
+                    <input type="text" id="unitCnt" placeholder="단위주문수량">
+                    <input type="text" id="opt" placeholder="옵션">
+                </div>
+                <div class="action-buttons">
+                    <button id="updateButton">update</button>
+                    <button id="createButton">create</button>
+                    <div id="resultMessage" class="result-message"></div>
+                </div>
+            </div>
         </div>
-        <div class="sidebar">
-            <div class="user-profile">
-                <p><%= user.id %></p>
-                <p>도매처 코드: <%= user.code %></p>
-                <button onclick="window.location.href='/logout'">로그아웃</button>
-            </div>
-            <div class="management-section">
-                <div class="upload-section">
-                    <h2>엑셀로 메뉴추가</h2>
-                    <button class="example-file" onclick="window.location.href='/file/product'">예시파일</button>
-                    <button class="upload-button">업로드</button>
-                </div>
-                <div class="upload-section">
-                    <h2>엑셀로 옵션추가</h2>
-                    <button class="example-file" onclick="window.location.href='/file/option'">예시파일</button>
-                    <button class="upload-button">업로드</button>
-                </div>
-                <div class="management-actions">
-                    <h2>관리</h2>
-                    <button class="download">다운로드</button>
-                    <button class="delete-all">전체삭제</button>
-                </div>
-            </div>
-        </div>        
+        <%- include('partial/prod-sidebar') %>
     </div>
-
-    <%- include('wholesale/partials/footer') %>
+    <%- include('partial/footer') %>
+    <script src="/js/wholesale/prod.js"></script>
 </body>
 </html>

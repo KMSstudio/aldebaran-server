@@ -1,0 +1,51 @@
+/* 
+* Wholesale Header Section
+* Header for wholesale webpage
+*/
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000;
+    padding: 10px 20px;
+    border-bottom: 1px solid #333;
+    position: relative;
+}
+
+.header .logo-section {
+    display: flex;
+    gap: 10px;
+}
+
+.header .logo {
+    background-color: #4a90e2;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.header .menu-section {
+    display: flex;
+    justify-content: center;
+    position: absolute; /* 부모 요소를 기준으로 절대 위치 */
+    left: 50%; /* 부모 요소의 왼쪽에서 50% */
+    transform: translateX(-50%); /* 자신의 너비의 50%만큼 왼쪽으로 이동 */
+    gap: 30px;
+}
+
+.header .menu-section a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-bottom: 2px solid transparent;
+}
+
+.header .menu-section a:hover {
+    border-bottom: 2px solid white;
+}
+
+.header .user-info {
+    font-size: 1.2em;
+}

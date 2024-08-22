@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="/css/wholesale/partial/prod-sidebar.css">
+
+<div class="sidebar">
+    <div class="user-profile">
+        <p><%= user.id %></p>
+        <p>도매처 코드: <%= user.code %></p>
+        <button onclick="window.location.href='/logout'">로그아웃</button>
+    </div>
+    <div class="management-section">
+        <div class="upload-section">
+            <h2>엑셀로 메뉴추가</h2>
+            <button class="example-file" onclick="window.location.href='/file/product'">예시파일</button>
+            <button class="upload-button">업로드</button>
+        </div>
+        <div class="upload-section">
+            <h2>엑셀로 옵션추가</h2>
+            <button class="example-file" onclick="window.location.href='/file/option'">예시파일</button>
+            <button class="upload-button">업로드</button>
+        </div>
+        <div class="management-actions">
+            <h2>관리</h2>
+            <button class="download">다운로드</button>
+            <button class="delete-all">전체삭제</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/wholesale/partial/prod-sidebar.js"></script>

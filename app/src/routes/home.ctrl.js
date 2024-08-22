@@ -43,19 +43,20 @@ const process = {
         home: async (req, res) => {
             // Get session
             const session = req.cookies.session;
-            let user = 'none';
+            let id = 'none';
             let code = '0000';
 
             if (session) {
                 try {
                     const result = await userSessions.checkSession(session, 'W');
-                    if (result.success) { user = result.id; code = result.code; }
+                    if (result.success) { id = result.id; code = result.code; }
                 } catch (error) { console.error('Session validation error:', error); }
             }
+            const user = { id, code };
 
             // Get order
             const order = { orders: [], msg: '', success: true };
-            if (user !== 'none') {
+            if (id !== 'none') {
                 try {
                     const orderData = await db_order.WrequestOrder(code);
                     if (orderData.success) {
@@ -81,7 +82,7 @@ const process = {
 
             // Render home.ejs
             res.render("wholesale/home", {
-                id: user,
+                user,
                 order,
             });
         },
@@ -126,7 +127,6 @@ const process = {
                 prod.msg = 'cannot request data: Server error';
                 prod.success = false;
             }
-
             // Render prod.ejs
             res.render("wholesale/prod", {
                 user,
@@ -229,6 +229,7 @@ const session = {
 };
 
 const product = {
+    // Push a product. name and price is necessary.
     push: async (req, res) => {
         let { code, name, price, minCnt, unitCnt, opt } = req.body;
 
@@ -246,12 +247,80 @@ const product = {
             }
         }
 
-        if (!code || !name || !price) { return res.status(400).json({ success: false, code: 4001, message: 'Name and price are required.' }); }
+        if (!code || !name || !price) { return res.status(400).json({ success: false, code: 2001, message: 'Name and price are required.' }); }
         try {
             const result = await db_product.createProduct(code, { name, price, minCnt, unitCnt, opt });
             return res.json(result);
         } catch (error) {
             console.error('Error creating product:', error);
+            return res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error });
+        }
+    },
+
+    // Update a product
+    update: async (req, res) => {
+        const { id } = req.params;
+        const { name, price, minCnt, unitCnt, opt } = req.body;
+        
+        const prod = {};
+        if (name) prod.name = name;
+        if (price) prod.price = price;
+        if (minCnt) prod.minCnt = minCnt;
+        if (unitCnt) prod.unitCnt = unitCnt;
+        if (opt) prod.opt = opt;
+
+        // Retrieve code from session
+        const session = req.cookies.session;
+        let code;
+        if (session) {
+            try {
+                const result = await userSessions.checkSession(session, 'W');
+                if (result.success) { code = result.code; }
+                else { return res.status(401).json(result); }
+            } catch (error) {
+                console.error('Session validation error:', error);
+                return res.status(500).json({ success: false, code: 2100, message: 'Internal server error during session validation.', error });
+            }
+        }
+
+        // Ensure the id starts with the code
+        if (!id.startsWith(code)) { return res.status(400).json({ success: false, code: 2004, message: 'Invalid product ID.' }); }
+        // Update product
+        try {
+            const result = await db_product.updateProduct(code, id, prod);
+            if (result.success) { return res.json(result); } 
+            else { return res.json(result); }
+        } catch (error) {
+            console.error('Error updating product:', error);
+            return res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error });
+        }
+    },
+
+    // Reset all products with the given code
+    reset: async (req, res) => {
+        let { code } = req.body;
+
+        // !Code
+        if (!code) {
+            const session = req.cookies.session;
+            if (session) {
+                try {
+                    const result = await userSessions.checkSession(session, 'W');
+                    if (result.success) { code = result.code; }
+                } catch (error) {
+                    console.error('Session validation error:', error);
+                    return res.status(500).json({ success: false, code: 2100, message: 'Internal server error during session validation.', error });
+                }
+            }
+        }
+
+        if (!code) { return res.status(400).json({ success: false, code: 2001, message: 'Code is required.' }); }
+
+        try {
+            const result = await db_product.resetProduct(code);
+            return res.json(result);
+        } catch (error) {
+            console.error('Error resetting products:', error);
             return res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error });
         }
     }

@@ -29,6 +29,8 @@ router.post("/order/push", ctrl.order.push);
 
 // Product
 router.post("/product/push", ctrl.product.push);
+router.post("/product/reset", ctrl.product.reset);
+router.post("/product/update/:id", ctrl.product.update);
 
 // Public, static files
 router.get("/file/product", ctrl.output.file.product);

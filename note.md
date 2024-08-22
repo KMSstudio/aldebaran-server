@@ -7,6 +7,14 @@ Order content json
     price: 23000,
 }
 
+## todo
+
+.xlsx 로 메뉴 올리기
+.xlsx 로 옵션 올리기
+opt 기능
+주문처리기능
+소매자가 보는 도매자 페이지 제작
+
 ## Database
 
 **wholesale**

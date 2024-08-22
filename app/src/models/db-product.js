@@ -19,7 +19,7 @@ const createProduct = async (code, prod) => {
         return { success: false, code: 4001, message: 'Product name and price are required.' };
     }
 
-    const id = `${code}${Sequence.nextSequence('prod' + code, 5)}`;
+    const id = `${code}${Sequence.nextSequence('prod' + code, 4)}`;
 
     const params = {
         TableName: tableName,
@@ -98,15 +98,25 @@ const deleteProduct = async (code, id) => {
     }
 };
 
-// 5. Update a product by code and id
+// Update a product by code and id
 const updateProduct = async (code, id, prod) => {
+    console.log('hello');
+    // check if the product exists
+    const checkParams = {
+        TableName: tableName,
+        Key: { code, id }
+    };
+    try {
+        const data = await dynamoDB.get(checkParams).promise();
+        if (!data.Item) { return { success: false, code: 2004, message: 'Product not found.' }; }
+    } catch (error) { return { success: false, code: 2104, message: 'Error retrieving product', error }; }
+
+    // make expression
     let updateExpression = 'set';
-    let ExpressionAttributeNames = {};
     let ExpressionAttributeValues = {};
 
     if (prod.name) {
-        updateExpression += ' #n = :name,';
-        ExpressionAttributeNames['#n'] = 'name';
+        updateExpression += ' name = :name,';
         ExpressionAttributeValues[':name'] = prod.name;
     } if (prod.price) {
         updateExpression += ' price = :price,';
@@ -126,15 +136,52 @@ const updateProduct = async (code, id, prod) => {
         TableName: tableName,
         Key: { code, id },
         UpdateExpression: updateExpression,
-        ExpressionAttributeNames,
         ExpressionAttributeValues
     };
 
+    // return value
     try {
         await dynamoDB.update(params).promise();
         return { success: true, code: 0, message: 'Product updated successfully.' };
     } catch (error) {
         return { success: false, code: 2104, message: 'Error updating product', error };
+    }
+};
+
+// Reset products by wholesale code
+const resetProduct = async (code) => {
+    const params = {
+        TableName: tableName,
+        KeyConditionExpression: "code = :code",
+        ExpressionAttributeValues: {
+            ":code": code
+        }
+    };
+
+    try {
+        // query all items with the given code
+        const data = await dynamoDB.query(params).promise();
+        const items = data.Items;
+
+        console.log(code);
+        console.log(items);
+
+        if (items.length === 0) { return { success: true, code: 0, message: 'No products found to delete.' }; }
+        // Delete items in batches
+        const deleteRequests = items.map(item => ({
+            DeleteRequest: { Key: { code: item.code, id: item.id } }
+        }));
+
+        // DynamoDB batchWrite
+        while (deleteRequests.length > 0) {
+            const batchParams = { RequestItems: { [tableName]: deleteRequests.splice(0, 25) } };
+            await dynamoDB.batchWrite(batchParams).promise();
+        }
+
+        return { success: true, code: 0, message: 'All products deleted successfully.' };
+    } catch (error) {
+        console.error('Error resetting products:', error);
+        return { success: false, code: 2103, message: 'Error resetting products', error };
     }
 };
 
@@ -144,4 +191,5 @@ module.exports = {
     getProduct,
     deleteProduct,
     updateProduct,
+    resetProduct,
 };

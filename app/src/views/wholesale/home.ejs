@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/wholesale/home.css">
 </head>
 <body>
-    <%- include('wholesale/partials/header') %>
+    <%- include('partial/header') %>
 
     <div class="content">
         <div class="order-info">
@@ -43,7 +43,7 @@
         </div>
         <div class="sidebar">
             <div class="user-profile">
-                <p><%= id %></p>
+                <p><%= user.id %></p>
                 <p>최초가입일 : YYYYMM</p>
                 <button onclick="window.location.href='/logout'">로그아웃</button>
             </div>
@@ -53,6 +53,6 @@
         </div>
     </div>
 
-    <%- include('wholesale/partials/footer') %>
+    <%- include('partial/footer') %>
 </body>
 </html>

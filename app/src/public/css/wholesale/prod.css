@@ -1,8 +1,18 @@
 /* Content Section */
 .content {
     display: flex;
+    flex-direction: row;
     flex: 1;
     padding: 20px;
+}
+
+/* Product Info Section */
+.product-info {
+    flex: 3;
+    padding: 20px;
+    background-color: #000; /* Background color to match the rest of the design */
+    border-radius: 8px;
+    margin-right: 20px;
 }
 
 .product-info {
@@ -18,8 +28,10 @@
     color: white;
 }
 
+/* Product Table */
 .prod-table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
     margin-top: 20px;
 }
@@ -36,6 +48,7 @@
     color: white;
 }
 
+/* Product Toggle Buttons */
 .prod-toggle {
     margin-bottom: 20px;
 }
@@ -53,69 +66,94 @@
     background-color: #555;
 }
 
-/* Sidebar session */
-.management-section {
+/* General layout adjustments for flexible resizing */
+.content {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+    gap: 20px; /* Add some space between content and sidebar */
+}
+
+/* Flex-grow added for proportional resizing */
+.product-info {
+    flex: 3;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.sidebar {
+    flex: 1;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #1c1c1c;
+}
+
+/* Set the input field widths to match the table column widths */
+.product-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Add spacing between input fields */
     margin-top: 20px;
-}
-
-.upload-section {
-    margin-bottom: 20px;
-}
-
-.upload-section h2 {
-    font-size: 1em;
-    margin-bottom: 10px;
-    color: white;
-}
-
-.example-file,
-.upload-button {
-    display: block;
     width: 100%;
-    padding: 10px;
+}
+
+.product-actions input {
+    flex: 1;
+    min-width: 100px; /* Set minimum width */
+    box-sizing: border-box; /* Include padding in the element's width and height */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
     background-color: #000;
+    color: #ccc;
+    text-align: left;
+}
+
+.product-actions .action-buttons {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+.product-actions .action-buttons button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #000;
+    border: 1px solid white;
     color: white;
-    border: 1px solid white;
-    margin-bottom: 10px;
-    text-align: center;
     cursor: pointer;
 }
 
-.example-file:hover,
-.upload-button:hover {
-    background-color: #333;
+.product-actions .action-buttons button:hover {
+    background-color: #ff0;
 }
 
-.management-actions button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    color: black;
-    background-color: white;
-    border: 1px solid white;
-    text-align: center;
-    cursor: pointer;
+.product-actions .result-message {
+    margin-left: 20px;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: red;
 }
 
-.management-actions .download {
-    background-color: yellow;
-    border-color: yellow;
-    color: black;
+/* Sync the widths of table columns and input fields */
+.product-actions input {
+    width: 15%;
 }
 
-.management-actions .delete-all {
-    background-color: yellow;
-    border-color: yellow;
-    color: black;
-}
-
-.management-actions button:hover {
-    opacity: 0.8;
-}
-
-.management-actions h2 {
+/* Result Message */
+.result-message {
+    margin-top: 15px;
     font-size: 1em;
-    margin-bottom: 10px;
-    color: white;
+    text-align: center;
+    flex: 1;
+}
+
+.result-message.success {
+    color: green;
+}
+
+.result-message.fail {
+    color: red;
 }
