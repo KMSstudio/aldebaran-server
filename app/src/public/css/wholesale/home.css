@@ -40,3 +40,19 @@
     background-color: #333;
     color: white;
 }
+/* QR Code Section */
+.qr-code-section button {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid white;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.qr-code-section button:hover {
+    background-color: #333;
+}

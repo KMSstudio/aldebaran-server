@@ -11,7 +11,7 @@ router.get("/", ctrl.output.home);
 router.get("/test/order", (req, res) => { res.render("test/order"); });
 
 // Session
-router.post("/session/check", ctrl.session.checkSession)
+router.post("/session/check", ctrl.api.session.checkSession)
 
 //  ========================================  //
 //              wholesale utility             //
@@ -19,26 +19,27 @@ router.post("/session/check", ctrl.session.checkSession)
 
 // Wholesale user login
 router.get("/wholesale/regist", ctrl.output.wholesale.regist);
-router.post("/wholesale/regist", ctrl.wholesale.regist);
+router.post("/wholesale/regist", ctrl.api.wholesale.regist);
 
 router.get("/wholesale/login", ctrl.output.wholesale.login);
-router.post("/wholesale/login", ctrl.wholesale.login);
+router.post("/wholesale/login", ctrl.api.wholesale.login);
 
 // Wholesale webpage
 router.get("/wholesale/home", ctrl.process.wholesale.home);
 router.get("/wholesale/prod", ctrl.process.wholesale.prod);
 
 // Product
-router.post("/product/push", ctrl.product.push);
-router.post("/product/reset", ctrl.product.reset);
-router.post("/product/update/:id", ctrl.product.update);
+router.post("/product/push", ctrl.api.product.push);
+router.post("/product/reset", ctrl.api.product.reset);
+router.post("/product/update/:id", ctrl.api.product.update);
 
 // Public, static files
 router.get("/file/product", ctrl.output.file.product);
 router.get("/file/option", ctrl.output.file.option);
+router.get("/file/shopqr", ctrl.api.file.shopqr);
 
 // Order
-router.post("/order/push", ctrl.order.push);
+router.post("/order/push", ctrl.api.order.push);
 
 //  =====================================  //
 //              retail utility             //
