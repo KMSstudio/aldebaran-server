@@ -1,6 +1,6 @@
 "use strict"
 
-const ShopQR = require("../models/shop-qr");
+const ShopQR = require("../models/ShopQR");
 const userSessions = require("../models/UserSessions");
 
 const db_wholesale = require("../models/db-wholesale");

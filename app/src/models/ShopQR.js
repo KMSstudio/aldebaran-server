@@ -17,7 +17,7 @@ class ShopQR {
     }
 
     static deleteQRCode(code) {
-        const filePath = path.join(__dirname, `../../log/text/qr${code}.png`);
+        const filePath = path.join(__dirname, `../../log/file/qr${code}.png`);
         try {
             if (fs.existsSync(filePath)) { fs.unlinkSync(filePath); }
         } catch (err) { console.error('Error deleting QR code file:', err); }
