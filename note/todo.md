@@ -2,8 +2,8 @@
 **close**  
 .xlsx 로 메뉴 올리기  
 .xlsx 로 옵션 올리기  
-option 기능
-shop url dirtify 하기
+회원삭제기능
+비밀번호변경기능
 
 **far**  
 주문량통계 확인

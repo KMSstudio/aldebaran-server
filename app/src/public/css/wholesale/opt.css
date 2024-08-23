@@ -1,0 +1,129 @@
+/* Option Info Section */
+.option-info {
+    flex: 3;
+    padding: 20px;
+    background-color: #000;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.option-info h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    color: white;
+}
+
+/* Option Table */
+.opt-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.opt-table th,
+.opt-table td {
+    border: 1px solid #333;
+    padding: 10px;
+    text-align: left;
+    vertical-align: top; /* 세로 방향으로 위 정렬 */
+}
+
+.opt-table th {
+    background-color: #333;
+    color: white;
+}
+
+/* Option Toggle Buttons */
+.opt-toggle {
+    margin-bottom: 20px;
+}
+
+.opt-toggle button {
+    background-color: #333;
+    color: white;
+    border: 1px solid white;
+    padding: 10px 20px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.opt-toggle button:hover {
+    background-color: #555;
+}
+
+/* Option Actions */
+.option-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.option-actions input {
+    flex: 1;
+    min-width: 20px;
+    box-sizing: border-box;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    background-color: #000;
+    color: #ccc;
+    text-align: left;
+}
+
+/* Buttons for actions */
+.option-actions .action-buttons {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+.option-actions .action-buttons button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #000;
+    border: 1px solid white;
+    color: white;
+    cursor: pointer;
+}
+
+.option-actions .action-buttons button:hover {
+    background-color: #ff0;
+}
+
+.option-actions .result-message {
+    margin-left: 20px;
+    font-weight: bold;
+    font-size: 0.9em;
+    color: red;
+}
+
+/* Sync the widths of table columns and input fields */
+.option-actions input:not(.content-input) {
+    width: 15%;
+}
+
+/* Adjusting for larger input area for content */
+.content-input {
+    width: 30%;
+}
+
+/* Result Message */
+.result-message {
+    margin-top: 15px;
+    font-size: 1em;
+    text-align: center;
+    flex: 1;
+}
+
+.result-message.success {
+    color: green;
+}
+
+.result-message.fail {
+    color: red;
+}

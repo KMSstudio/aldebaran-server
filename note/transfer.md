@@ -49,6 +49,31 @@
         }
     }
 
+### render wholesale/opt
+
+{
+    user: {
+        id: ,
+        code: ,
+        name: ,
+    },
+    opt: {
+        success: (true/false),
+        msg: "",
+        opts: [
+            {
+                id: item.id,
+                name: item.name,
+                minSelect: item.minSelect,
+                maxSelect: item.maxSelect,
+                // content 배열 예시: [ { nm: "opt1", ad: 0 }, { nm: "opt2", ad: 500 }, ... ]
+                content: item.content
+            },
+            ...
+        ]
+    }
+}
+
 ### render shop (shop/code)
 
     {
@@ -102,7 +127,7 @@
     }
 
 ## Data transfer - Order.ejs
-### order request (/order/push)
+### order request (send to /order/push)
 
     {
         wholesale: {
@@ -112,7 +137,7 @@
         retail: {
             code: ,
             name: ,
-            // 없을 시 home.ctrl.js에서 자동생성
+            // ip 없을 시 home.ctrl.js에서 자동생성
             ip: ,
         },
         order: {

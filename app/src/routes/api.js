@@ -7,6 +7,7 @@ const db_wholesale = require("../models/db-wholesale");
 const db_retail = require("../models/db-retail");
 const db_order = require("../models/db-order");
 const db_product = require("../models/db-product");
+const db_option = require("../models/db-option");
 
 const api = {
     wholesale: {
@@ -34,6 +35,32 @@ const api = {
             } catch (error) { res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error }); }
         },
     }, //wholesale
+
+    retail: {
+        // regist user
+        regist: async (req, res) => {
+            const { id, pw, ...userData } = req.body;
+            try { const result = await db_retail.createUser(id, pw, { ...userData }); res.json(result); }
+            catch (error) { res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error }); }
+        },
+        // login and get user info
+        login : async (req, res) => {
+            const { id, pw } = req.body;
+            try { 
+                const result = await db_retail.reqUser(id, pw);
+                if (result.code != 0){ res.json(result); return; }
+                const reqSession = await userSessions.createSession({ code: result.user.code, id: result.user.id, name: result.user.name }, 'R');
+                if (reqSession.code != 0){ res.json(reqSession); return; }
+                // Save the session in a cookie
+                res.cookie('session', reqSession.session, {
+                    httpOnly: true,
+                    secure: false,
+                    maxAge: 3600000
+                });
+                res.json({ ...result, session: reqSession.session });
+            } catch (error) { res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error }); }
+        },
+    }, //retail
 
     order: {
         // push order
@@ -101,9 +128,9 @@ const api = {
     }, // session
 
     product: {
-        // Push a product. name and price is necessary.
+        // Push a option. name and price is necessary.
         push: async (req, res) => {
-            let { code, name, price, minCnt, unitCnt, opt } = req.body;
+            let { code, name, price, minCnt, unitCnt, content } = req.body;
             // !Code
             if (!code) {
                 const session = req.cookies.session;
@@ -117,10 +144,10 @@ const api = {
                     }
                 }
             }
-            if (!code || !name || !price) { return res.status(400).json({ success: false, code: 2001, message: 'Name and price are required.' }); }
+            if (!code || !name || !content) { return res.status(400).json({ success: false, code: 2001, message: 'Name and price are required.' }); }
             
             try {
-                const result = await db_product.createProduct(code, { name, price, minCnt, unitCnt, opt });
+                const result = await db_product.createProduct(code, { name, price, minCnt, unitCnt, content });
                 return res.json(result);
             } catch (error) {
                 console.error('Error creating product:', error);
@@ -195,6 +222,106 @@ const api = {
         }
     }, // product
 
+    option: {
+        // Push a product. name and price is necessary.
+        push: async (req, res) => {
+            let { code, name, minSelect, maxSelect, content } = req.body;
+            
+            // !Code
+            if (!code) {
+                const session = req.cookies.session;
+                if (session) {
+                    try {
+                        const result = await userSessions.checkSession(session, 'W');
+                        if (result.success) { code = result.code; }
+                    } catch (error) {
+                        console.error('Session validation error:', error);
+                        return res.status(500).json({ success: false, code: 2100, message: 'Internal server error during session validation.', error });
+                    }
+                }
+            }
+            if (!code || !name || !content) { return res.status(400).json({ success: false, code: 2001, message: 'Name is required.' }); }
+            
+            const opt = {};
+            if (name) opt.name = name;
+            if (minSelect) opt.minSelect = minSelect;
+            if (maxSelect) opt.maxSelect = maxSelect;
+            if (content) opt.content = content;
+            try {
+                const result = await db_option.createOption(code, opt);
+                return res.json(result);
+            } catch (error) {
+                console.error('Error creating option:', error);
+                return res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error });
+            }
+        },
+
+        // Update a product
+        update: async (req, res) => {
+            const { id } = req.params;
+            const { name, minSelect, maxSelect, content } = req.body;
+            
+            const opt = {};
+            if (name) opt.name = name;
+            if (minSelect) opt.minSelect = minSelect;
+            if (maxSelect) opt.maxSelect = maxSelect;
+            if (content) opt.content = content;
+
+            // Retrieve code from session
+            const session = req.cookies.session;
+            let code;
+            if (session) {
+                try {
+                    const result = await userSessions.checkSession(session, 'W');
+                    if (result.success) { code = result.code; }
+                    else { return res.status(401).json(result); }
+                } catch (error) {
+                    console.error('Session validation error:', error);
+                    return res.status(500).json({ success: false, code: 2100, message: 'Internal server error during session validation.', error });
+                }
+            }
+
+            // Ensure the id starts with the code
+            if (!id.startsWith(code)) { return res.status(400).json({ success: false, code: 2004, message: 'Invalid option ID.' }); }
+            // Update
+            try {
+                const result = await db_option.updateOption(code, id, opt);
+                if (result.success) { return res.json(result); } 
+                else { return res.json(result); }
+            } catch (error) {
+                console.error('Error updating option:', error);
+                return res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error });
+            }
+        },
+
+        // Reset all products with the given code
+        reset: async (req, res) => {
+            let { code } = req.body;
+            // !Code
+            if (!code) {
+                const session = req.cookies.session;
+                if (session) {
+                    try {
+                        const result = await userSessions.checkSession(session, 'W');
+                        if (result.success) { code = result.code; }
+                    } catch (error) {
+                        console.error('Session validation error:', error);
+                        return res.status(500).json({ success: false, code: 2100, message: 'Internal server error during session validation.', error });
+                    }
+                }
+            }
+            if (!code) { return res.status(400).json({ success: false, code: 2001, message: 'Code is required.' }); }
+
+            try {
+                const result = await db_option.resetOption(code);
+                return res.json(result);
+            } catch (error) {
+                console.error('Error resetting option:', error);
+                return res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error });
+            }
+        }
+    }, //option
+
     file: {
         shopqr: async (req, res) => {
             let { code } = req.query;
@@ -223,31 +350,7 @@ const api = {
         }
     }, // file
 
-    retail: {
-        // regist user
-        regist: async (req, res) => {
-            const { id, pw, ...userData } = req.body;
-            try { const result = await db_retail.createUser(id, pw, { ...userData }); res.json(result); }
-            catch (error) { res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error }); }
-        },
-        // login and get user info
-        login : async (req, res) => {
-            const { id, pw } = req.body;
-            try { 
-                const result = await db_retail.reqUser(id, pw);
-                if (result.code != 0){ res.json(result); return; }
-                const reqSession = await userSessions.createSession({ code: result.user.code, id: result.user.id, name: result.user.name }, 'R');
-                if (reqSession.code != 0){ res.json(reqSession); return; }
-                // Save the session in a cookie
-                res.cookie('session', reqSession.session, {
-                    httpOnly: true,
-                    secure: false,
-                    maxAge: 3600000
-                });
-                res.json({ ...result, session: reqSession.session });
-            } catch (error) { res.status(500).json({ success: false, code: 2100, message: 'Internal server error', error }); }
-        },
-    }, //retail
+    
 }; // api
 
 module.exports = api;

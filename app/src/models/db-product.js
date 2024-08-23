@@ -13,7 +13,7 @@ AWS.config.update({
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.AWS_PRODUCT_LIST;
 
-// Create a new product
+// Create new product
 const createProduct = async (code, prod) => {
     if (!prod.name || !prod.price) {
         return { success: false, code: 4001, message: 'Product name and price are required.' };
@@ -87,10 +87,7 @@ const deleteProduct = async (code, id) => {
 
     try {
         const data = await dynamoDB.get(params).promise();
-        if (!data.Item) {
-            return { success: false, code: 2205, message: 'Product not found.' };
-        }
-
+        if (!data.Item) { return { success: false, code: 2205, message: 'Product not found.' }; }
         await dynamoDB.delete(params).promise();
         return { success: true, code: 0, message: 'Product deleted successfully.' };
     } catch (error) {

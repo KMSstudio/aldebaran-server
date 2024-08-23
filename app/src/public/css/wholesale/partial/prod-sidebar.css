@@ -19,12 +19,6 @@
     margin-bottom: 20px;
 }
 
-.sidebar .upload-section h2 {
-    font-size: 1em;
-    margin-bottom: 10px;
-    color: white;
-}
-
 .sidebar .example-file,
 .sidebar .upload-button {
     display: block;
@@ -56,22 +50,22 @@
 }
 
 .sidebar .management-actions .download {
-    background-color: yellow;
-    border-color: yellow;
-    color: black;
+    background-color: #000;
+    border-color: #ff0;
+    color: #ff0;
 }
 
 .sidebar .management-actions .delete-all {
-    background-color: yellow;
-    border-color: yellow;
-    color: black;
+    background-color: #000;
+    border-color: #ff0;
+    color: #ff0;
 }
 
 .sidebar .management-actions button:hover {
     opacity: 0.8;
 }
 
-.sidebar .management-actions h2 {
+.sidebar h2 {
     font-size: 1em;
     margin-bottom: 10px;
     color: white;

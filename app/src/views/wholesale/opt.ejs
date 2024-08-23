@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= user.id %>의 옵션 관리</title>
+    <link rel="stylesheet" href="/css/wholesale/style.css">
+    <link rel="stylesheet" href="/css/wholesale/opt.css">
+</head>
+<body>
+    <%- include('partial/header') %>
+    
+    <div class="container">
+        <div class="content">
+            <div class="option-info">
+                <h2><%= user.id %>의 옵션</h2>
+                <div class="opt-toggle">
+                    <button onclick="window.location.href='/wholesale/prod'">상품</button>
+                    <button onclick="window.location.href='/wholesale/opt'">옵션</button>
+                </div>
+            
+                <% if (!opt.success) { %>
+                    <p class="error-msg"><%= opt.msg %></p>
+                <% } else if (opt.opts.length === 0) { %>
+                    <p>옵션이 비어있습니다.</p>
+                <% } else { %>
+                    <table class="opt-table">
+                        <thead>
+                            <tr>
+                                <th>옵션코드</th>
+                                <th>옵션명</th>
+                                <th>최소선택수</th>
+                                <th>최대선택수</th>
+                                <th>옵션내용</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% opt.opts.forEach(function(item) { %>
+                                <tr>
+                                    <td><%= item.id %></td>
+                                    <td><%= item.name %></td>
+                                    <td><%= item.minSelect %></td>
+                                    <td><%= item.maxSelect %></td>
+                                    <td>
+                                        <% item.content.forEach(function(c) { %>
+                                            <div><%= c.nm %> (+<%= c.ad.toLocaleString() %>)</div>
+                                        <% }) %>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+            
+                <!-- Option Actions -->
+                <div class="option-actions">
+                    <div class="action-group">
+                        <input type="text" id="optCode" placeholder="옵션코드">
+                        <input type="text" id="optName" placeholder="옵션명">
+                        <input type="text" id="minSelect" placeholder="최소선택수">
+                        <input type="text" id="maxSelect" placeholder="최대선택수">
+                        <input type="text" id="content" class="content-input" placeholder="옵션내용 (예: opt1:0,opt2:500)">
+                    </div>
+                    <div class="action-buttons">
+                        <button id="updateButton">update</button>
+                        <button id="createButton">create</button>
+                        <div id="resultMessage" class="result-message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include('partial/prod-sidebar') %>
+    </div>
+    <%- include('partial/footer') %>
+    <script src="/js/wholesale/opt.js"></script>
+</body>
+</html>
