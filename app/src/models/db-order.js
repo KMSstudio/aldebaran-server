@@ -17,7 +17,7 @@ const tableName = process.env.AWS_ORDER_LIST;
 // Needs: wholesale.code, wholesale.name, retail.ip, retail.code, retail.name, order.content, orcer.price
 const createOrder = async (wholesale, retail, order) => {
     const id = crypto.randomUUID();
-    const date = new Date().toISOString().slice(0, 16).replace('T', ' ');
+    const date = new Date(Date.now() + (9*60*60*1000)).toISOString().slice(0, 16).replace('T', ' ');
     
     const params = {
         TableName: tableName,

@@ -1,5 +1,6 @@
 "use struct"
 
+const Hash = require("../models/Hash");
 const userSessions = require("../models/UserSessions");
 
 const db_wholesale = require("../models/db-wholesale");
@@ -173,7 +174,7 @@ const process = {
                         retail.id = result.id;
                         retail.code = result.code;
                         retail.name = result.name;
-                        await db_retail.addShop(retail.id, wholesale.xcode, wholesale.name);
+                        await db_retail.addShop(retail.id, Hash.hashString(wholesale.code), wholesale.name);
                     }
                 } catch (error) { console.error('Session validation error:', error); }
             }
@@ -207,6 +208,7 @@ const process = {
 
             // get retail info by getUser(code)
             const userData = await db_retail.getUser(retail.code);
+            console.log(userData.user.connShop);
             const conn = userData.user.connShop || [];
 
             // WrequestOrder(code)
@@ -224,6 +226,8 @@ const process = {
                 order.msg = `Failed to load order data: ${orderData.message}`;
                 order.success = false;
             }
+
+            console.log(conn);
 
             // Render retail/main
             res.render("retail/main", {

@@ -8,7 +8,7 @@ class ShopQR {
 
     static async generateQRCode(code) {
         const url = `${this.baseURL}/shop/${code}`;
-        const filePath = path.join(__dirname, `../../log/text/qr${code}.png`);
+        const filePath = path.join(__dirname, `../../log/file/qr${code}.png`);
 
         try {
             await QRCode.toFile(filePath, url);

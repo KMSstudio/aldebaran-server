@@ -87,8 +87,12 @@
         </div>
         <div class="sidebar">
             <div class="user-profile">
-                <p><%= retail.name %></p>
-                <button onclick="window.location.href='/logout'">로그아웃</button>
+                <% if (retail && retail.id !== 'none') { %>
+                    <p><%= retail.name %></p>
+                    <button onclick="window.location.href='/retail/logout'">로그아웃</button>
+                <% } else { %>
+                    <button onclick="window.location.href='/retail/login'">로그인하기</button>
+                <% } %>
             </div>
             <div class="cart-section">
                 <h2>장바구니</h2>

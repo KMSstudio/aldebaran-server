@@ -138,6 +138,38 @@ body {
     background-color: #ff3333;
 }
 
+.sidebar .user-profile button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #000;
+    color: white;
+    border: 1px solid white;
+    margin-bottom: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.sidebar .user-profile button:hover {
+    background-color: #333;
+}
+
+.sidebar #orderButton {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+    margin-bottom: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.sidebar #orderButton:hover {
+    background-color: #ccc;
+}
+
 /* Footer Styles */
 footer {
     text-align: center;
@@ -145,4 +177,61 @@ footer {
     background-color: #000000;
     border-top: 1px solid #333;
     color: #FFFFFF;
+}
+
+/* Style for the quantity input field */
+input[type="number"] {
+    width: 100%;
+    padding: 5px;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+    text-align: center;
+}
+
+
+
+/* Product Table Styles */
+.prod-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed; /* Fixes the table layout */
+}
+
+.prod-table th,
+.prod-table td {
+    border: 1px solid #333;
+    padding: 10px;
+    text-align: left;
+}
+
+/* Input and button styles to fill cell without expanding the table */
+input[type="number"] {
+    width: 100%;
+    padding: 5px;
+    background-color: #333;
+    color: #FFFFFF;
+    border: 1px solid #555;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+input[type="number"]:focus {
+    border-color: #fff;
+    outline: none;
+}
+
+.cart-btn {
+    width: 100%;
+    background-color: #000;
+    color: white;
+    border: 1px solid #fff;
+    padding: 10px 0;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.cart-btn:hover {
+    background-color: #333;
 }
