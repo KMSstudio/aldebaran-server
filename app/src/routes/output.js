@@ -11,12 +11,20 @@ const output = {
     wholesale: {
         regist: (req, res) => { res.render("wholesale/regist"); },
         login: (req, res) => { res.render("wholesale/login"); },
+        logout: (req, res) => {
+            res.clearCookie('session');
+            res.redirect('/wholesale/login');
+        },
     },
 
     // Retail login and register page
     retail: {
         regist: (req, res) => { res.render("retail/regist"); },
         login: (req, res) => { res.render("retail/login"); },
+        logout: (req, res) => {
+            res.clearCookie('session');
+            res.redirect('/retail/login');
+        },
     },
 
     // Public file output

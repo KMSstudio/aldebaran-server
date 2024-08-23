@@ -146,13 +146,43 @@ const process = {
             if (!productData.success) {
                 prod.success = false;
                 prod.msg = `Fail to get product data: ${productData.message}`;
-            }
+            } else { prod.prods = productData.products; }
 
-            // Make prod.prods data (item: [])
-            prod.prods = productData.products.map(item => ({
-                ...item,
-                opt: [] // Hardcoding opt values to an empty array
-            }));
+            // Make options
+            const optionData = await db_option.requestOption(code);
+            if(!optionData.success) {
+                prod.prods = prod.prods.map(prodItem => { return { ...prodItem, opt: [] }; })
+                prod.success = false;
+                prod.msg = `Fail to get option data: ${optionData.message}`;
+            } else {
+                // Create optionMap
+                const optionMap = {};
+                optionData.options.forEach(option => {
+                    optionMap[option.id] = {
+                        id: option.id,
+                        name: option.name,
+                        minSelect: option.minSelect,
+                        maxSelect: option.maxSelect,
+                        content: option.content
+                    };
+                });
+
+                // Update prod.prods[].opt with optionMap
+                prod.prods = prod.prods.map(prodItem => {
+                    let optionDetails;
+                    if (!prodItem.opt || (prodItem.opt.length === 0)) { optionDetails = []; }
+                    else {
+                        optionDetails = prodItem.opt
+                            .map(optionId => optionMap[optionId])
+                            .filter(opt => opt !== undefined);
+                    }
+
+                    return {
+                        ...prodItem,
+                        opt: optionDetails
+                    };
+                });
+            }
 
             // Request wholesale data by code
             const wholesaleData = await db_wholesale.getUser(code);
@@ -208,7 +238,6 @@ const process = {
 
             // get retail info by getUser(code)
             const userData = await db_retail.getUser(retail.code);
-            console.log(userData.user.connShop);
             const conn = userData.user.connShop || [];
 
             // WrequestOrder(code)
@@ -226,8 +255,6 @@ const process = {
                 order.msg = `Failed to load order data: ${orderData.message}`;
                 order.success = false;
             }
-
-            console.log(conn);
 
             // Render retail/main
             res.render("retail/main", {

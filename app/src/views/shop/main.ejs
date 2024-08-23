@@ -47,7 +47,7 @@
                     </thead>
                     <tbody>
                         <% prod.prods.forEach(function(product) { %>
-                            <tr>
+                            <tr class="product-row">
                                 <td><%= product.id %></td>
                                 <td><%= product.name %></td>
                                 <td><%= product.price.toLocaleString() %>원</td>
@@ -55,14 +55,14 @@
                                 <td><%= product.unitCnt %></td>
                             </tr>
                             <% if (product.opt.length > 0) { %>
-                                <tr class="option-row">
-                                    <td colspan="5">
-                                        <div class="option-details">
-                                            <% product.opt.forEach(function(option) { %>
+                                <% product.opt.forEach(function(option) { %>
+                                    <tr class="option-row">
+                                        <td colspan="5">
+                                            <div class="option-details">
                                                 <div class="option-group">
-                                                    <label><%= option.optName %></label>
+                                                    <label><%= option.name %></label>
                                                     <div>
-                                                        <% option.opt.forEach(function(optItem) { %>
+                                                        <% option.content.forEach(function(optItem) { %>
                                                             <label>
                                                                 <input type="checkbox" value="<%= optItem.nm %>" data-add="<%= optItem.ad %>">
                                                                 <%= optItem.nm %> (+<%= optItem.ad %>원)
@@ -70,10 +70,10 @@
                                                         <% }); %>
                                                     </div>
                                                 </div>
-                                            <% }); %>
-                                        </div>
-                                    </td>
-                                </tr>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% }); %>
                             <% } %>
                             <tr class="action-row">
                                 <td colspan="3"></td>

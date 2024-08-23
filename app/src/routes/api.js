@@ -124,7 +124,10 @@ const api = {
             } catch (error) {
                 res.status(500).json({ success: false, code: 2100, message: 'Internal server error during session refinement', error });
             }
-        }
+        },
+
+        // Clear session
+        deleteSession: (req, res) => { res.clearCookie('session'); },
     }, // session
 
     product: {

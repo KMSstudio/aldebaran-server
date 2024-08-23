@@ -24,6 +24,8 @@ router.post("/wholesale/regist", ctrl.api.wholesale.regist);
 router.get("/wholesale/login", ctrl.output.wholesale.login);
 router.post("/wholesale/login", ctrl.api.wholesale.login);
 
+router.get("/wholesale/logout", ctrl.output.wholesale.logout);
+
 // Wholesale webpage
 router.get("/wholesale/home", ctrl.process.wholesale.home);
 router.get("/wholesale/prod", ctrl.process.wholesale.prod);
@@ -44,6 +46,8 @@ router.post("/retail/regist", ctrl.api.retail.regist);
 
 router.get("/retail/login", ctrl.output.retail.login);
 router.post("/retail/login", ctrl.api.retail.login);
+
+router.get("/retail/logout", ctrl.output.retail.logout);
 
 // Retail webpage
 router.get("/retail/main", ctrl.process.retail.main);

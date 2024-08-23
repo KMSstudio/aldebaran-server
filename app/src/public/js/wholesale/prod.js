@@ -15,7 +15,7 @@ function createProduct() {
     if (productPrice) data.price = productPrice;
     if (productMinCnt) data.minCnt = productMinCnt;
     if (productUnitCnt) data.unitCnt = productUnitCnt;
-    if (productOpt) data.opt = productOpt;
+    if (productOpt) data.opt = productOpt.split(',').map(opt => opt.trim());
 
     fetch('/product/push', {
         method: 'POST',
@@ -56,7 +56,7 @@ function updateProduct() {
     if (productPrice) data.price = productPrice;
     if (productMinCnt) data.minCnt = productMinCnt;
     if (productUnitCnt) data.unitCnt = productUnitCnt;
-    if (productOpt) data.opt = productOpt;
+    if (productOpt) data.opt = productOpt.split(',').map(opt => opt.trim());
 
     fetch(`/product/update/${productId}`, {
         method: 'POST',

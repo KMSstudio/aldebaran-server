@@ -42,7 +42,9 @@
                     price: item.price,
                     minCnt: item.minCnt,
                     unitCnt: item.unitCnt,
-                    opt: item.opt
+                    opt: item.opt = [
+                        'AAAA0009', 'AAAA0021', ...
+                    ]
                 },
                 ...
             ]
@@ -92,7 +94,18 @@
             id: ,
             minCnt: ,
             name: ,
-            opt: ,
+            opt: [
+                {
+                    id: ,
+                    name: ,
+                    minSelect: ,
+                    maxSelect: ,
+                    content: [
+                        { nm: "차갑게", ad: "500" }
+                        { nm: "뜨겁게", ad: "0" }
+                    ]
+                }, ...
+            ],
             price: ,
             unitCnt: ,
         }

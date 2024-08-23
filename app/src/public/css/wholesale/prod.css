@@ -33,6 +33,7 @@
     border: 1px solid #333;
     padding: 10px;
     text-align: left;
+    vertical-align: top; /* 세로 방향으로 위 정렬 */
 }
 
 .prod-table th {

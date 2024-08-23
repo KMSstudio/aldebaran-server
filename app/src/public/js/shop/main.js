@@ -90,10 +90,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const cartButtons = document.querySelectorAll(".cart-btn");
     cartButtons.forEach(button => {
         button.addEventListener("click", function() {
-            const row = this.closest("tr").previousElementSibling;
-            const productName = row.querySelector("td:nth-child(2)").innerText;
-            const productPrice = parseInt(row.querySelector("td:nth-child(3)").innerText.replace(/[^0-9]/g, ""));
-            const quantityInput = row.nextElementSibling.querySelector("input[name='quantity']");
+            const currentRow = this.closest("tr");
+            let productRow = currentRow;
+            while (productRow && !productRow.classList.contains("product-row")) {
+                productRow = productRow.previousElementSibling;
+            }
+            const productName = productRow.querySelector("td:nth-child(2)").innerText;
+            const productPrice = parseInt(productRow.querySelector("td:nth-child(3)").innerText.replace(/[^0-9]/g, ""));
+            const quantityInput = currentRow.querySelector("input[name='quantity']");
             const quantity = parseInt(quantityInput.value);
 
             addItemToCart(productName, productPrice, quantity);

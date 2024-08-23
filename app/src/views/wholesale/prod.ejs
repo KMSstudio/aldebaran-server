@@ -43,7 +43,7 @@
                                     <td><%= item.price.toLocaleString() %></td>
                                     <td><%= item.minCnt %></td>
                                     <td><%= item.unitCnt %></td>
-                                    <td><%= item.opt || '-' %></td>
+                                    <td><%= (item.opt && item.opt.length > 0) ? item.opt.join('\n') : '-' %></td>
                                 </tr>
                             <% }) %>
                         </tbody>
