@@ -74,16 +74,66 @@ body {
 }
 
 /* Option Styles */
-.option-group {
+.option-details {
+    background-color: #000;
+    padding: 10px;
+    margin-top: 10px;
     margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.option-group label {
+.option-details label {
+    display: block;
     font-weight: bold;
+    margin-bottom: 10px;
+    color: #FFFFFF;
+    padding: 5px;
 }
 
-.option-group div {
-    margin-left: 10px;
+.option-details div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.option-details input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #fff;
+    background-color: #000;
+    margin-right: 10px;
+    cursor: pointer;
+    position: relative;
+}
+
+.option-details input[type="checkbox"]:checked {
+    background-color: #fff;
+}
+
+.option-details input[type="checkbox"]:checked::before {
+    content: "✔";
+    color: #000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.option-details label span {
+    margin-left: 5px;
+}
+
+/* Additional style for option labels */
+.option-label {
+    display: flex;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 5px 10px;
+    margin-right: 10px;
+    cursor: pointer;
 }
 
 /* Sidebar Styles */

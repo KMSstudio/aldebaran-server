@@ -59,16 +59,14 @@
                                     <tr class="option-row">
                                         <td colspan="5">
                                             <div class="option-details">
-                                                <div class="option-group">
-                                                    <label><%= option.name %></label>
-                                                    <div>
-                                                        <% option.content.forEach(function(optItem) { %>
-                                                            <label>
-                                                                <input type="checkbox" value="<%= optItem.nm %>" data-add="<%= optItem.ad %>">
-                                                                <%= optItem.nm %> (+<%= optItem.ad %>원)
-                                                            </label>
-                                                        <% }); %>
-                                                    </div>
+                                                <label><%= option.name %></label>
+                                                <div>
+                                                    <% option.content.forEach(function(optItem) { %>
+                                                        <label>
+                                                            <input type="checkbox" optName="<%= optItem.nm %>" optAdd="<%= optItem.ad %>">
+                                                            <%= optItem.nm %> (+<%= optItem.ad %>원)
+                                                        </label>
+                                                    <% }); %>
                                                 </div>
                                             </div>
                                         </td>

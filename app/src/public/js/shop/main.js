@@ -27,13 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Function to add an item to the cart
-    function addItemToCart(name, price, quantity) {
-        const existingItem = cartItems.find(item => item.name === name);
-        if (existingItem) {
-            existingItem.quantity += quantity;
-        } else {
-            cartItems.push({ name, price, quantity });
-        }
+    function addItemToCart(name, price, quantity, options) {
+        const totalPrice = price + options.reduce((acc, opt) => acc + opt.price, 0);
+        cartItems.push({ name, price: totalPrice, quantity });
         updateCartUI();
     }
 
@@ -100,7 +96,22 @@ document.addEventListener("DOMContentLoaded", () => {
             const quantityInput = currentRow.querySelector("input[name='quantity']");
             const quantity = parseInt(quantityInput.value);
 
-            addItemToCart(productName, productPrice, quantity);
+            /// Collect all selected options between productRow and currentRow
+            let optionRow = productRow.nextElementSibling;
+            const selectedOptions = [];
+            while (optionRow && optionRow !== currentRow) {
+                if (optionRow.classList.contains("option-row")) {
+                    const checkboxes = optionRow.querySelectorAll("input[type='checkbox']:checked");
+                    checkboxes.forEach(checkbox => {
+                        const optionName = checkbox.getAttribute("optName");
+                        const optionPrice = parseInt(checkbox.getAttribute("optAdd"));
+                        selectedOptions.push({ name: optionName, price: optionPrice });
+                    });
+                }
+                optionRow = optionRow.nextElementSibling;
+            }
+
+            addItemToCart(productName, productPrice, quantity, selectedOptions);
         });
     });
 
