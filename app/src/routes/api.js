@@ -133,7 +133,7 @@ const api = {
     product: {
         // Push a option. name and price is necessary.
         push: async (req, res) => {
-            let { code, name, price, minCnt, unitCnt, content } = req.body;
+            let { code, name, price, minCnt, unitCnt } = req.body;
             // !Code
             if (!code) {
                 const session = req.cookies.session;
@@ -147,10 +147,10 @@ const api = {
                     }
                 }
             }
-            if (!code || !name || !content) { return res.status(400).json({ success: false, code: 2001, message: 'Name and price are required.' }); }
+            if (!code || !name) { return res.status(400).json({ success: false, code: 2001, message: 'Name and price are required.' }); }
             
             try {
-                const result = await db_product.createProduct(code, { name, price, minCnt, unitCnt, content });
+                const result = await db_product.createProduct(code, { name, price, minCnt, unitCnt });
                 return res.json(result);
             } catch (error) {
                 console.error('Error creating product:', error);

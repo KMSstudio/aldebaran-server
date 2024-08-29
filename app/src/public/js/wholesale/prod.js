@@ -17,6 +17,8 @@ function createProduct() {
     if (productUnitCnt) data.unitCnt = productUnitCnt;
     if (productOpt) data.opt = productOpt.split(',').map(opt => opt.trim());
 
+    console.log(data);
+
     fetch('/product/push', {
         method: 'POST',
         headers: {
